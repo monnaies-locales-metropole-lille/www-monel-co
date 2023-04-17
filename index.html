@@ -1,0 +1,116 @@
+<html>
+	<head>
+		<style>
+			img {
+				width: 100%; /* or any custom size */
+				height: 100%; 
+				object-fit: contain;
+			}
+			.mainframe {
+				position: relative;
+				width: 1280px;
+				height: 720px;
+				background: #FFFFFF;
+			}
+			.fond {
+				position: absolute;
+				left: 0%;
+				right: 0%;
+				top: 0%;
+				bottom: 33%;
+				background: #7E9BB1;
+			}
+			.picto_chargement {
+				position: absolute;
+				left: 18.67%;
+				right: 70.47%;
+				top: 18%;
+				bottom: 56%;
+			}
+			.titre {
+				position: absolute;
+				left: 32.81%;
+				right: 21.17%;
+				top: 18%;
+				bottom: 56%;
+				font-family: 'Fenwick';
+				font-style: normal;
+				font-weight: 700;
+				font-size: 50px;
+				line-height: 60px;
+				color: #FFFFFF;
+
+			}
+			.sstitre {
+				position: absolute;
+				left: 33.36%;
+				right: 18.67%;
+				top: 44%;
+				bottom: 46%;
+				font-family: 'Fenwick';
+				font-style: normal;
+				font-weight: 400;
+				font-size: 17.35px;
+				line-height: 21px;
+				color: #FFFFFF;
+			}
+			.logo {
+				position: absolute;
+				left: 34.61%;
+				right: 34.65%;
+				top: 73.61%;
+				bottom: 9.03%;
+			}
+			.button {
+				background: #FFFFFF;
+				border: none;
+				border-radius: 20px;
+				font-family: 'Fenwick';
+				font-style: normal;
+				font-weight: 400;
+				font-size: 17.35px;
+				line-height: 21px;
+				color: #305789;
+				text-align: center;
+				padding: 0px 10px;
+				cursor:pointer;
+			}
+			.button_left {
+				position: absolute;
+				left: 33.36%;
+				right: 57%;
+				top: 57%;
+				bottom: 36%;
+			}
+			.button_right {
+				position: absolute;
+				left: 47%;
+				right: 35%;
+				top: 57%;
+				bottom: 36%;
+			}
+		</style>
+	</head>
+	<div class="mainframe">
+		<div class="fond">
+			<div class="picto_chargement">
+				<img src="img/chargement.png" alt="">
+			</div>
+			<div class="titre">
+				Le site de Monel<br>est en construction !
+			</div>
+			<div class="sstitre">
+				Il sera bientôt disponible. Pour plus d’informations,<br>retrouvez nous sur mlml.fr, ou contactez-nous par mail.
+			</div>
+			<button class="button button_left" onclick="window.location.href='https://mlml.fr'">
+				<img src="img/fleche.png" style="height:38%;width:30%;">mlml.fr
+			</button>
+			<button class="button button_right" onclick="window.location.href='mailto:contact@monel.co'">
+				<img src="img/fleche.png" style="height:38%;width:18%;">contact@monel.co
+			</button>
+		</div>
+		<div class="logo">
+			<img src="img/monel-baseline-bleu.png">
+		</div>
+	</div>
+</html>
