@@ -1,134 +1,185 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<style>
-		@font-face {
-			font-family: "Fenwick";
-			src: url("fonts/Fenwick.ttf");
-		}
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-		img {
-			width: 100%;
-			/* or any custom size */
-			height: 100%;
-			object-fit: contain;
-		}
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+		integrity="sha256-+IZRbz1B6ee9mUx/ejmonK+ulIP5A5bLDd6v6NHqXnI=" crossorigin="anonymous">
 
-		.mainframe {
-			position: relative;
-			width: 100%;
-			height: 720px;
-			background: #FFFFFF;
-		}
+	<link rel="stylesheet" href="css/main.css">
 
-		.fond {
-			position: absolute;
-			left: 0%;
-			right: 0%;
-			top: 0%;
-			bottom: 33%;
-			background: #7E9BB1;
-		}
-
-		.picto_chargement {
-			position: absolute;
-			left: 18.67%;
-			right: 70.47%;
-			top: 18%;
-			bottom: 56%;
-		}
-
-		.titre {
-			position: absolute;
-			left: 32.81%;
-			right: 20%;
-			top: 18%;
-			bottom: 56%;
-			font-family: 'Fenwick';
-			font-style: normal;
-			font-weight: 700;
-			font-size: 50px;
-			line-height: 60px;
-			color: #FFFFFF;
-
-		}
-
-		.sstitre {
-			position: absolute;
-			left: 33.36%;
-			right: 20%;
-			top: 44%;
-			bottom: 46%;
-			font-family: 'Fenwick';
-			font-style: normal;
-			font-weight: 400;
-			font-size: 17.35px;
-			line-height: 21px;
-			color: #FFFFFF;
-		}
-
-		.logo {
-			position: absolute;
-			left: 34.61%;
-			right: 34.65%;
-			top: 73.61%;
-			bottom: 9.03%;
-		}
-
-		.button {
-			background: #FFFFFF;
-			border: none;
-			border-radius: 20px;
-			font-family: 'Fenwick';
-			font-style: normal;
-			font-weight: 400;
-			font-size: 17.35px;
-			line-height: 21px;
-			color: #305789;
-			text-align: center;
-			padding: 0px 10px;
-			cursor: pointer;
-		}
-
-		.button_left {
-			position: absolute;
-			left: 33.36%;
-			right: 57%;
-			top: 57%;
-			bottom: 36%;
-		}
-
-		.button_right {
-			position: absolute;
-			left: 47%;
-			right: 35%;
-			top: 57%;
-			bottom: 36%;
-		}
-	</style>
+	<title>Hello, world!</title>
 </head>
-<div class="mainframe">
-	<div class="fond">
-		<div class="picto_chargement">
-			<img src="img/chargement-02.svg" alt="">
+
+<body>
+	<div class="container">
+
+		<nav class="navbar navbar-expand-sm">
+			<a class="navbar-brand justify-content-start" href="#">
+				<img src="img/monel-bleu.png" alt="Le logo Monel" style="height:30px;">
+			</a>
+			<ul class="navbar-nav w-100 justify-content-end">
+				<li class="nav-item">
+					<a class="nav-link" href="#quoi">Monel c'est quoi ?</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#avantages">Avantages</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#qui">Pour qui ?</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="https://moncompte.monel.co">Mon compte Monel</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#rejoindre">Nous rejoindre</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="d-flex justify-content-center logo-background">
+			<img src="img/monel-baseline-bleu.png" alt="Monel au coeur de vos échanges"
+				style="height:650px;padding:50px 0px 450px 0px;">
 		</div>
-		<div class="titre">
-			Le site de Monel<br>est en construction !
+
+		<div class="d-flex flex-column align-items-center" id="quoi">
+			<div>Monel c'est quoi ?</div>
+			<div>
+				Monel est un réseau d’échanges de biens et services entre entreprises de la Métropole Lilloise avec sa propre
+				monnaie.
+				Il remet du sens et du local au cœur des échanges entre entreprises.
+			</div>
+			<div class="text-center w-50 rectangle fond-bleu">
+				<p>En rejoignant <b>Monel</b>, vous vous engagez dans<br>un réseau qui favorise les échanges <b>en local</b>.
+				<p>Un réseau qui agit pour <b>accroître la résilience</b><br>des entreprises, du territoire et de ses habitants.
+				<p>Un réseau qui agit pour <b>réduire notre impact sur la planète</b>.
+				<p>Un réseau qui <b>rapproche les acteurs</b> économiques<br>pour <b>favoriser l'innovation</b> et <b>la
+						circularité des échanges</b>.
+			</div>
+			<div>Nous rejoindre</div>
 		</div>
-		<div class="sstitre">
-			Il sera bientôt disponible. Pour plus d’informations,<br>retrouvez nous sur mlml.fr, ou contactez-nous par mail.
-		</div>
-		<button class="button button_left" onclick="window.location.href='https://mlml.fr'">
-			<img src="img/fleche.png" style="height:38%;width:30%;">mlml.fr
-		</button>
-		<button class="button button_right" onclick="window.location.href='mailto:contact@monel.co'">
-			<img src="img/fleche.png" style="height:38%;width:18%;">contact@monel.co
-		</button>
 	</div>
-	<div class="logo">
-		<img src="img/monel-baseline-bleu.png">
+
+	<div class="d-flex flex-column align-items-center fond-gris" id="avantages">
+		<div>Quels avantages pour votre structure ?</div>
+		<div class="d-flex">
+			<div class="col">
+				<hr>
+				<span>Développez votre activité localement avec des acteurs de confiance</span>
+				<hr>
+				<span>
+					<ul>
+						<li>
+							Des clients proches de chez vous qui partagent vos valeurs
+						</li>
+						<li>
+							Une chaîne d’approvisionnement raccourcie et renforcée
+						</li>
+						<li>
+							Valorisation de vos actifs sous-utilisé
+						</li>
+					</ul>
+				</span>
+			</div>
+			<div class="col">
+				<hr>
+				<span>Profitez d’une ligne de trésorerie à taux zéro et de délais de paiement instantanés</span>
+				<hr>
+				<span>
+					<ul>
+						<li>
+							Stabilité financière renforcée
+						</li>
+						<li>
+							Augmentation des capacités d’investissement
+						</li>
+					</ul>
+				</span>
+			</div>
+			<div class="col">
+				<hr>
+				<span>Concrétisez vos engagements pour un développement responsable et durable</span>
+				<hr>
+				<span>
+					<ul>
+						<li>
+							Démarche RSE ancrée sur le local
+						</li>
+						<li>
+							Contribution au fond 1% planète
+						</li>
+					</ul>
+				</span>
+			</div>
+		</div>
 	</div>
-</div>
+
+	<div class="d-flex flex-column align-items-center fond-bleu" id="qui">
+		<div>Qui peut utiliser Monel ?</div>
+		<div>
+			Toutes les organisations qui veulent faire avancer les choses en réalisant une partie de leurs échanges en
+			circuits courts !
+		</div>
+		<div class="d-flex">
+			<div class="row">
+				<div class="col">
+					Vous êtes une entreprise (EI, TPE, PME, ETI) ou une association
+				</div>
+				<div class="col">
+					Votre siège social se trouve sur la Métropole Lilloise ou aux alentours
+				</div>
+				<div class="col">
+					Vous adhérez à notre charte de valeurs qui souligne l’importance d’un développement durable et responsable
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="d-flex flex-column align-items-center">
+		<div>Qui sommes-nous ?</div>
+		<div>
+			Monel est un service porté par l’association
+			Monnaies Locales Métropole Lilloise (MLML).
+		</div>
+		<hr>
+		<div>
+			MLML réunit depuis sa création en 2020 des entreprises, des citoyens
+			et des collectivités locales partageant les mêmes objectifs : redonner du sens
+			à nos échanges économiques en s’appuyant sur l’outil monétaire.
+		</div>
+		<hr>
+		<div class="d-flex">
+			<div class="col">
+				<img src="img/Perrick2.png" alt="Photo de Perrick">
+				Perrick Penet
+			</div>
+			<div class="col">Chloé Philippot</div>
+			<div class="col">Jean Fauvet</div>
+		</div>
+		<div class="d-flex">
+			<div class="col">Nicolas Gantois</div>
+			<div class="col">Rémi Nivet</div>
+		</div>
+	</div>
+
+	<div class="d-flex" id="rejoindre">
+	</div>
+
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha256-QjIXq/h3XOotww+h/j4cXiTcNZqA8cN60pqGCUv+gdE=" crossorigin="anonymous"></script>
+</body>
 
 </html>

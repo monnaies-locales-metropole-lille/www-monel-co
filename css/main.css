@@ -1,0 +1,21 @@
+.logo-background {
+	background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
+	background-size: cover;
+	background-origin: border-box;
+	background-position-x: center;
+	background-position-y: -350px;
+}
+
+.rectangle {
+	padding: 25px;
+	border-radius: 25px;
+}
+
+.fond-bleu {
+	background: #A8D7DD;
+}
+
+.fond-gris {
+	background: #DDDDDD;
+}
+
