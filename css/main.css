@@ -8,6 +8,12 @@
 
 .rectangle {
 	padding: 25px;
+	margin: 25px;
+	border-radius: 25px;
+}
+
+.rectangle-3d {
+	box-shadow: 6px 6px 0px #7E9BB1;
 	border-radius: 25px;
 }
 
@@ -19,3 +25,22 @@
 	background: #DDDDDD;
 }
 
+.fond-blanc {
+	background: #FFFFFF;
+}
+
+.deco-bleu {
+	text-decoration-color: #A8D7DD;
+}
+
+.deco-blanc {
+	text-decoration-color: #FFFFFF;
+}
+
+.bouton-bleu {
+	background: #305780;
+	border: none;
+	border-radius: 73px;
+	color: #FFFFFF;
+	padding: 5px 10px;
+}
