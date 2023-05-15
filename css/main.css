@@ -21,6 +21,10 @@
 	background: #A8D7DD;
 }
 
+.fond-bleu-fonce {
+	background: #305780;
+}
+
 .fond-gris {
 	background: #DDDDDD;
 }
@@ -43,4 +47,26 @@
 	border-radius: 73px;
 	color: #FFFFFF;
 	padding: 5px 10px;
+}
+
+.signet-container {
+	position: relative;
+	height: 15em;
+}
+
+.signet-img {
+	position: absolute;
+	top: 8%;
+	left: 2%;
+}
+
+.signet-nb {
+	position: absolute;
+	left:42%;
+}
+
+.signet-txt {
+	position: absolute;
+	top: 30%;
+	left: 20%;
 }
