@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
 		integrity="sha256-+IZRbz1B6ee9mUx/ejmonK+ulIP5A5bLDd6v6NHqXnI=" crossorigin="anonymous">
 	-->
-	<link rel="stylesheet" href="scss/custom-bootstrap.css">
+	<link rel="stylesheet" href="css/custom-bootstrap.css">
 
 	<link rel="stylesheet" href="css/main.css">
 
@@ -22,29 +22,29 @@
 
 		<nav class="navbar navbar-expand-sm">
 			<a class="navbar-brand justify-content-start" href="#">
-				<img src="img/monel-bleu.png" alt="Le logo Monel" style="height:30px;">
+				<img src="img/logo-monel.svg" alt="Le logo Monel" style="height:30px;">
 			</a>
 			<ul class="navbar-nav w-100 justify-content-end">
 				<li class="nav-item">
-					<a class="nav-link" href="#quoi">Monel c'est quoi ?</a>
+					<a class="nav-link mr-4" href="#quoi">Monel c'est quoi ?</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#avantages">Avantages</a>
+					<a class="nav-link mr-4" href="#avantages">Avantages</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#qui">Pour qui ?</a>
+					<a class="nav-link mr-4" href="#qui">Pour qui ?</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="https://moncompte.monel.co">Mon compte Monel</a>
+					<a class="nav-link mr-4" href="https://moncompte.monel.co">Mon compte Monel</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#rejoindre">Nous rejoindre</a>
+					<a class="nav-link bouton-bleu-clair mr-4" href="#rejoindre">Nous rejoindre</a>
 				</li>
 			</ul>
 		</nav>
 
 		<div class="d-flex justify-content-center logo-background">
-			<img src="img/monel-baseline-bleu.png" alt="Monel au coeur de vos échanges"
+			<img src="img/logo-monel-baseline.svg" alt="Monel au coeur de vos échanges"
 				style="height:650px;padding:50px 0px 450px 0px;">
 		</div>
 
@@ -55,14 +55,12 @@
 					Monel, <u class="deco-bleu">c'est quoi ?</u>
 				</h1>
 			</div>
-			<div class="text-center w-50">
-				<h5>
-					<p>Monel est un réseau d’échanges de biens et services entre entreprises
-						de la Métropole Lilloise avec sa propre monnaie.
-					<p class="font-weight-normal">Il remet du sens et du local<br>au cœur des échanges entre entreprises.
-				</h5>
+			<div class="text-center w-75 txt-large">
+				<p class="font-weight-bold">Monel est un réseau d’échanges de biens et services entre entreprises
+					de la Métropole Lilloise avec sa propre monnaie.
+				<p class="font-weight-normal">Il remet du sens et du local<br>au cœur des échanges entre entreprises.
 			</div>
-			<div class="text-center w-50 rectangle fond-bleu">
+			<div class="text-center w-75 rectangle fond-bleu">
 				<p>En rejoignant <b>Monel</b>, vous vous engagez dans<br>un réseau qui favorise les échanges <b>en local</b>.
 				<p>Un réseau qui agit pour <b>accroître la résilience</b><br>des entreprises, du territoire et de ses habitants.
 				<p>Un réseau qui agit pour <b>réduire notre impact sur la planète</b>.
@@ -71,7 +69,7 @@
 			</div>
 			<div>
 				<img class="m-2" src="img/fleche.svg">
-				<button class="bouton-bleu">Nous rejoindre</button>
+				<a class="bouton-bleu" href="#rejoindre">Nous rejoindre</a>
 				<img class="m-2" src="img/etoiles.svg">
 			</div>
 		</div>
@@ -88,59 +86,55 @@
 					<img class="mx-auto d-block m-4" src="img/bonhommes.svg">
 					<hr>
 					<div class="text-center">
-						<h6>Développez votre activité<br>localement avec des<br>acteurs de confiance</h6>
+						<p class="font-weight-bold">Développez votre activité<br>localement avec des<br>acteurs de confiance
 					</div>
 					<hr>
-					<span>
-						<ul>
-							<li>
-								Des clients proches de chez vous qui partagent vos valeurs
-							</li>
-							<li>
-								Une chaîne d’approvisionnement raccourcie et renforcée
-							</li>
-							<li>
-								Valorisation de vos actifs sous-utilisé
-							</li>
-						</ul>
-					</span>
+					<ul class="list-arrow font-weight-light">
+						<li>
+							Des clients proches de chez vous qui partagent vos valeurs
+						</li>
+						<li>
+							Une chaîne d’approvisionnement raccourcie et renforcée
+						</li>
+						<li>
+							Valorisation de vos actifs sous-utilisé
+						</li>
+					</ul>
 				</div>
 				<div class="col rectangle-3d fond-blanc m-4">
-					<img class="mx-auto d-block m-4" src="img/piece+ronds.svg">
+					<img class="mx-auto d-block" style="margin:2.3rem;" src="img/piece+ronds.svg">
 					<hr>
 					<div class="text-center">
-						<h6>Profitez d’une ligne<br>de trésorerie à taux zéro et<br>de délais de paiement<br>instantanés</h6>
+						<p class="font-weight-bold">Profitez d’une ligne<br>de trésorerie à taux zéro et<br>de délais de
+							paiement<br>instantanés
 					</div>
 					<hr>
-					<span>
-						<ul>
-							<li>
-								Stabilité financière renforcée
-							</li>
-							<li>
-								Augmentation des capacités d’investissement
-							</li>
-						</ul>
-					</span>
+					<ul class="list-arrow font-weight-light">
+						<li>
+							Stabilité financière renforcée
+						</li>
+						<li>
+							Augmentation des capacités d’investissement
+						</li>
+					</ul>
 					<img class="mx-auto d-block m-4" src="img/etoile-bleu.svg">
 				</div>
 				<div class="col rectangle-3d fond-blanc m-4">
 					<img class="mx-auto d-block m-4" src="img/arbres.svg">
 					<hr>
 					<div class="text-center">
-						<h6>Concrétisez<br>vos engagements<br>pour un développement<br>responsable et durable</h6>
+						<p class="font-weight-bold">Concrétisez<br>vos engagements<br>pour un développement<br>responsable et
+							durable
 					</div>
 					<hr>
-					<span>
-						<ul>
-							<li>
-								Démarche RSE ancrée<br>sur le local
-							</li>
-							<li>
-								Contribution au fond 1% planète
-							</li>
-						</ul>
-					</span>
+					<ul class="list-arrow font-weight-light">
+						<li>
+							Démarche RSE ancrée<br>sur le local
+						</li>
+						<li>
+							Contribution au fond 1% planète
+						</li>
+					</ul>
 					<img class="mx-auto d-block m-4" src="img/etoile-bleu.svg">
 				</div>
 			</div>
@@ -154,13 +148,14 @@
 				</h1>
 			</div>
 			<div class="text-center">
-				<h5>
-					<p>Toutes les organisations qui veulent faire avancer<br>les choses en réalisant une partie de leurs
-						échanges<br>
-						<img src="img/etoile-blanche.svg">
-						en circuits courts !
-						<img src="img/etoile-blanche.svg">
-				</h5>
+				<p class="font-weight-bold txt-large">Toutes les organisations qui veulent faire avancer<br>les
+					choses en
+					réalisant une
+					partie de leurs
+					échanges<br>
+					<img src="img/etoile-blanche.svg">
+					en circuits courts !
+					<img src="img/etoile-blanche.svg">
 			</div>
 			<div class="d-flex w-100 p-4">
 				<div class="col">
@@ -188,7 +183,7 @@
 						<img class="img-fluid signet-img" src="img/signet-fond.svg">
 						<img class="img-fluid signet-img" src="img/signet-contour.svg">
 						<img class="img-fluid signet-nb" src="img/3.svg">
-						<div class="text-center signet-txt" style="top:20%;">
+						<div class="text-center signet-txt" style="top:24%;">
 							Vous adhérez à notre charte<br>de valeurs qui souligne<br>l’importance d’un<br>développement durable<br>et
 							responsable
 						</div>
@@ -197,7 +192,7 @@
 			</div>
 			<div>
 				<img class="m-2" src="img/fleche-blanche.svg">
-				<button class="bouton-bleu">Nous rejoindre</button>
+				<a class="bouton-bleu" href="#rejoindre">Nous rejoindre</a>
 				<img class="m-2" src="img/etoiles.svg">
 			</div>
 		</div>
@@ -206,60 +201,64 @@
 			<div class="m-4">
 				<h1>
 					<img src="img/bonhomme.svg">
-					Qu<u class="deco-blanc"">i sommes-nous ?</u>
+					Qu<u class="deco-bleu">i sommes-nous ?</u>
 				</h1>
 			</div>
 			<div>
-					<h5>
-						<p>Monel est un service porté par l’association<br>Monnaies Locales Métropole Lilloise (MLML).
-					</h5>
+				<p class="font-weight-bold txt-large">Monel est un service porté par l’association<br>Monnaies Locales Métropole
+					Lilloise
+					(MLML).
 			</div>
-			<div>
+			<div class="font-weight-light">
 				<hr>
-				MLML réunit depuis sa création en 2020 des <b>entreprises, des citoyens<br>et des collectivités locales</b> partageant les mêmes objectifs : <b>redonner du sens<br>à nos échanges économiques</b> en s’appuyant sur l’outil monétaire.
+				MLML réunit depuis sa création en 2020 des <b>entreprises, des citoyens<br>et des collectivités locales</b>
+				partageant les mêmes objectifs : <b>redonner du sens<br>à nos échanges économiques</b> en s’appuyant sur l’outil
+				monétaire.
 				<hr>
 			</div>
-			<div class=" d-flex">
-						<div class="col">
-							<img class="rounded-circle img-fluid" src="img/Perrick2.png" alt="Photo de Perrick">
-							<div class="text-center"><b>Perrick Penet</b></div>
-						</div>
-						<div class="col">
-							<img class="rounded-circle img-fluid" src="img/Chloe2.png" alt="Photo de Chloé">
-							<div class="text-center"><b>Chloé Philippot</b></div>
-						</div>
-						<div class="col">
-							<img class="rounded-circle img-fluid" src="img/Jean2.png" alt="Photo de Jean">
-							<div class="text-center"><b>Jean Fauvet</b></div>
-						</div>
-						<div class="col">
-							<img class="rounded-circle img-fluid" src="img/Nicolas2.png" alt="Photo de Nicolas">
-							<div class="text-center"><b>Nicolas Gantois</b></div>
-						</div>
-						<div class="col">
-							<img class="rounded-circle img-fluid" src="img/Remi2.png" alt="Photo de Rémi">
-							<div class="text-center"><b>Rémi Nivet</b></div>
-						</div>
+			<div class="d-flex row">
+				<div class="col text-center portrait">
+					<img class="rounded-circle portrait" src="img/Perrick2.png" alt="Photo de Perrick">
+					<div>Perrick Penet</div>
+				</div>
+				<div class="col text-center portrait">
+					<img class="rounded-circle portrait" src="img/Chloe2.png" alt="Photo de Chloé">
+					<div>Chloé Philippot</div>
+				</div>
+				<div class="col text-center portrait">
+					<img class="rounded-circle portrait" src="img/Jean2.png" alt="Photo de Jean">
+					<div>Jean Fauvet</div>
+				</div>
 			</div>
+			<div class="d-flex row">
+				<div class="col text-center portrait">
+					<img class="rounded-circle portrait" src="img/Nicolas2.png" alt="Photo de Nicolas">
+					<div>Nicolas Gantois</div>
+				</div>
+				<div class="col text-center portrait">
+					<img class="rounded-circle portrait" src="img/Remi2.png" alt="Photo de Rémi">
+					<div>Rémi Nivet</div>
+				</div>
+			</div>
+			<hr>
 			<div class="d-flex m-4 w-75" id="rejoindre">
 				<div class="col"> <img src="img/fleche.svg"></div>
 				<div class="col-12">
-					<h5>
-						Vous avez envie de nous rejoindre<br>ou d’en savoir plus ?
-					</h5>
-					Laissez nous vos coordonnées via ce formulaire<br>ou contactez-nous à contact@monel.co
+					<span class="font-weight-bold txt-large">Vous avez envie de nous rejoindre<br>ou d’en savoir plus ?</span>
+					<p class="font-weight-light">Laissez nous vos coordonnées via ce formulaire<br>ou contactez-nous à
+						<b>contact@monel.co</b>
 				</div>
 			</div>
 
 			<div class="rectangle fond-bleu w-75">
 				<form>
-					<div class="form-group">
+					<div class="form-group form-custom text-center">
 						<input type="text" class="form-control rectangle fond-blanc" placeholder="Nom">
 						<input type="text" class="form-control rectangle fond-blanc" placeholder="Prénom">
 						<input type="text" class="form-control rectangle fond-blanc" placeholder="Société">
 						<input type="email" class="form-control rectangle fond-blanc" placeholder="Email">
 						<textarea class="form-control rectangle fond-blanc" rows="5" placeholder="Message"></textarea>
-						<input type="button" value="Envoyer">
+						<input type="button" class="bouton-blanc" value="Envoyer">
 					</div>
 				</form>
 			</div>
@@ -279,15 +278,16 @@
 				</h1>
 			</div>
 			<div class="text-center">
-				<h5>Retrouvez ici toutes nos ressources documentaires</h5>
-				(grille tarifaire, plaquette découverte, informations complémentaires…).
+				<p class="font-weight-bold text-large">Retrouvez ici toutes nos ressources documentaires
+				<p>(grille tarifaire, plaquette découverte, informations complémentaires…).
 			</div>
 			<div class="m-4">
 				<img src="img/bonhommes-infos.svg">
 			</div>
 			<div>
 				<img src="img/fleche-grise.svg">
-				<button class="bouton-bleu">Espace public</button>
+				<a class="bouton-bleu"
+					href="https://drive.google.com/drive/u/0/folders/1b_FIgSt_LlKqbmK_9xQoJOyEAkIo9IH7">Espace public</a>
 			</div>
 		</div>
 
@@ -297,6 +297,24 @@
 					<img src="img/ronds.svg" class="m-4">
 					Ils sont déjà engagés<br>avec Monel
 				</h1>
+			</div>
+			<div class="row">
+				<img class="m-2" src="img/logo-moduo.svg">
+				<img class="m-2" src="img/logo-easi.svg">
+				<img src="img/logo-happy.svg">
+				<img class="m-2" src="img/logo-wokine.svg">
+				<img src="img/logo-pauci.svg">
+				<img class="m-2" src="img/logo-mlml.svg">
+				<img class="m-2" src="img/logo-bh.svg">
+			</div>
+			<div class="row">
+				<img src="img/logo-choisis.svg">
+				<img class="m-2" src="img/logo-graine.svg">
+				<img class="m-2" src="img/logo-tokici.svg">
+				<img class="m-2" src="img/logo-noparking.svg">
+				<img src="img/logo-besquare.svg">
+				<img class="m-2" src="img/logo-share&smile.svg">
+				<img class="m-2" src="img/logo-mlaconstellation.svg">
 			</div>
 		</div>
 

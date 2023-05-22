@@ -35,10 +35,12 @@
 
 .deco-bleu {
 	text-decoration-color: #A8D7DD;
+	text-decoration-thickness: 10%;
 }
 
 .deco-blanc {
 	text-decoration-color: #FFFFFF;
+	text-decoration-thickness: 10%;
 }
 
 .bouton-bleu {
@@ -46,7 +48,23 @@
 	border: none;
 	border-radius: 73px;
 	color: #FFFFFF;
+	padding: 10px 10px;
+}
+
+.bouton-bleu-clair {
+	background: #7E92A9;
+	border: none;
+	border-radius: 73px;
+	color: #FFFFFF;
 	padding: 5px 10px;
+}
+
+.bouton-blanc {
+	border: none;
+	border-radius: 73px;
+	padding: 5px 30px;
+	background: #FFFFFF;
+	color: #305780;
 }
 
 .signet-container {
@@ -69,4 +87,34 @@
 	position: absolute;
 	top: 30%;
 	left: 20%;
+	font-weight: 300;
+	font-size: 0.8rem;
+}
+
+.list-arrow {
+	list-style-image: url('../img/fleche-liste.svg');
+}
+
+.txt-large {
+	font-size: 1.25rem;
+}
+
+img.portrait {
+	width: 150px;
+}
+
+div.portrait {
+	margin-left: 3rem;
+	margin-right: 3rem;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+input::placeholder {
+	color: red;
+	opacity: 1;
+}
+
+.form-custom {
+	width: 93%;
 }

@@ -1,7 +1,17 @@
+
+// Override default bootstrap font
 @font-face {
 	font-family: "Fenwick";
 	src: url("../fonts/Fenwick.ttf");
 }
 $font-family-sans-serif: "Fenwick";
+
+// Define our own theme colors
+$dark-blue: #305780;
+
+// Override bootstrap theme
+$body-color: $dark-blue;
+$primary: $dark-blue;
+//$headings-color: $dark-blue;
 
 @import "../bootstrap/scss/bootstrap";
