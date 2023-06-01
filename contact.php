@@ -17,10 +17,10 @@ $subject = 'Nouveau contact sur le site www.monel.co';
 $fields = array('nom' => 'Nom', 'prenom' => 'Prénom', 'societe' => 'Société', 'email' => 'Email', 'message' => 'Message'); 
 
 // message that will be displayed when everything is OK :)
-$okMessage = 'Votre message a bien été transmis. Nous vous contacterons dans les plus bref délais.';
+$okMessage = 'Votre message a bien été transmis.<br>Nous vous contacterons dans les plus bref délais.';
 
 // If something goes wrong, we will display this message.
-$errorMessage = 'La soumission du formulaire a généré une erreur. Svp veuillez reessayer plus tard ou contactez-nous directement à l\'adresse contact@monel.co';
+$errorMessage = 'La soumission du formulaire a généré une erreur.<br>Svp veuillez reessayer plus tard ou contactez-nous directement à l\'adresse contact@monel.co';
 
 /*
  *  LET'S DO THE SENDING
