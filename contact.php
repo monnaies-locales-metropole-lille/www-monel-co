@@ -4,7 +4,7 @@
  */
 
 // an email address that will be in the From field of the email.
-$from = 'Formulaire contact du site www.monel.co <no-reply@monel.co>';
+$from = '<no-reply@monel.co>';
 
 // an email address that will receive the email with the output of the form
 $sendTo = 'Contact monel.co<remi.nivet@monel.co>';
@@ -34,7 +34,7 @@ try
 
     if(count($_POST) == 0) throw new \Exception('Form is empty');
             
-    $emailText = "You have a new message from your contact form\n=============================\n";
+    $emailText = "Vous avez un nouveau message de votre formulaire contact\n======================================================\n";
 
     foreach ($_POST as $key => $value) {
         // If the field exists in the $fields array, include it in the email 
