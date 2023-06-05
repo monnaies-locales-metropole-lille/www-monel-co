@@ -7,7 +7,7 @@
 $from = '<no-reply@monel.co>';
 
 // an email address that will receive the email with the output of the form
-$sendTo = 'Contact monel.co<remi.nivet@monel.co>';
+$sendTo = 'Contact www.monel.co <contact@monel.co>';
 
 // subject of the email
 $subject = 'Nouveau contact sur le site www.monel.co';
