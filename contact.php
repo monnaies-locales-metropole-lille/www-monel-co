@@ -4,10 +4,10 @@
  */
 
 // an email address that will be in the From field of the email.
-$from = '<no-reply@monel.co>';
+$from = 'Formulaire contact<ne-pas-repondre@monel.co>';
 
 // an email address that will receive the email with the output of the form
-$sendTo = 'Contact www.monel.co <contact@monel.co>';
+$sendTo = '<contact@monel.co>';
 
 // subject of the email
 $subject = 'Nouveau contact sur le site www.monel.co';

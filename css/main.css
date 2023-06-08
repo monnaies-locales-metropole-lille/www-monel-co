@@ -7,6 +7,10 @@ b {
 	font-weight: 700;
 }
 
+a:hover {
+	text-decoration: none;
+}
+
 .logo-background {
 	background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
 	background-size: cover;
@@ -60,12 +64,22 @@ b {
 	padding: 10px 10px;
 }
 
+.bouton-bleu:hover {
+	color: #FFFFFF;
+	box-shadow: 3px 4px #7E92A9;
+}
+
 .bouton-bleu-clair {
 	background: #7E92A9;
 	border: none;
 	border-radius: 73px;
 	color: #FFFFFF;
 	padding: 5px 10px;
+}
+
+.bouton-bleu-clair:hover {
+	background: #305780;
+	color: #FFFFFF;
 }
 
 .bouton-blanc {
@@ -76,28 +90,40 @@ b {
 	color: #305780;
 }
 
+.bouton-blanc:hover {
+	color: #305780;
+	box-shadow: 3px 4px #7E92A9;
+}
+
 .signet-container {
 	position: relative;
-	height: 15em;
+	height: 20em;
 }
 
 .signet-img {
 	position: absolute;
 	top: 8%;
-	left: 2%;
+	left: 6%;
+	z-index: 1;
 }
 
 .signet-nb {
 	position: absolute;
-	left:42%;
+	left:43%;
+	z-index: 2;
 }
 
-.signet-txt {
+.signet-txt-container {
 	position: absolute;
-	top: 30%;
-	left: 20%;
+	height: 70%;
+}
+.signet-txt {
+	/* position: absolute; */
+	/* top: 30%; */
+	/* left: 12%; */
 	font-weight: 300;
-	font-size: 0.8rem;
+	font-size: 1rem;
+	z-index: 2;
 }
 
 .list-arrow {
@@ -105,11 +131,21 @@ b {
 }
 
 .txt-large {
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 }
 
 .txt-titre {
 	font-size: 2.5rem;
+	font-weight: 700;
+}
+
+.txt-footer {
+	color: white;
+	font-size: 0.75rem;
+}
+
+a.txt-footer:hover {
+	color: white;
 }
 
 img.portrait {
@@ -130,4 +166,13 @@ input::placeholder {
 
 .form-custom {
 	width: 93%;
+}
+
+#scrollback-arrow {
+	display: none;
+  position: fixed;
+  bottom: 60px;
+  right: 60px;
+	cursor: pointer;
+  z-index: 99;
 }
