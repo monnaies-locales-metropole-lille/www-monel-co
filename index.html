@@ -18,53 +18,61 @@
 </head>
 
 <body>
-	<img src="img/fleche-retour.svg" onclick="topFunction()" id="scrollback-arrow">
+
 	<div class="container-fluid">
 
-		<nav class="navbar navbar-expand-sm">
+		<nav class="navbar navbar-expand-lg navbar-light bg-white">
 			<a class="navbar-brand justify-content-start" href="#">
 				<img src="img/logo-monel.svg" alt="Le logo Monel" style="height:30px;">
 			</a>
-			<ul class="navbar-nav w-100 justify-content-end">
-				<li class="nav-item">
-					<a class="nav-link mr-4" href="#quoi">Monel c'est quoi ?</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link mr-4" href="#avantages">Avantages</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link mr-4" href="#qui">Pour qui ?</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link mr-4" href="https://moncompte.monel.co">Mon compte Monel</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link bouton-bleu-clair mr-4" href="#rejoindre">Nous rejoindre</a>
-				</li>
-			</ul>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbar">
+				<ul class="navbar-nav w-100 justify-content-end">
+					<li class="nav-item">
+						<a class="nav-link ml-2 mr-2 text-center" href="#quoi">Monel c'est quoi ?</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link ml-2 mr-2 text-center" href="#avantages">Avantages</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link ml-2 mr-2 text-center" href="#qui">Pour qui ?</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link ml-2 mr-2 text-center" href="https://moncompte.monel.co">Mon compte Monel</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link bouton-bleu-clair ml-2 mr-2 text-center" href="#rejoindre">Nous rejoindre</a>
+					</li>
+				</ul>
+			</div>
 		</nav>
 
 		<div class="d-flex justify-content-center logo-background">
-			<img src="img/logo-monel-baseline.svg" alt="Monel au coeur de vos échanges"
-				style="height:650px;padding:50px 0px 450px 0px;">
+			<img src="img/logo-monel-baseline.svg" alt="Monel au coeur de vos échanges" class="img-fluid"
+				style="height:650px;padding:50px 20px 450px 20px;">
 		</div>
 
-		<div class="d-flex flex-column align-items-center p-5" id="quoi">
-			<div class="row pb-4">
-				<div class="col m-auto">
-					<img src="img/loupe.svg" alt="loupe">
+		<div class="d-flex flex-column align-items-center pt-5 pb-5" id="quoi">
+			<div class="row no-gutters pb-4 align-items-center">
+				<div class="col">
+					<img src="img/loupe.svg" class="float-right mr-4">
 				</div>
 				<div class="col text-nowrap txt-titre">
-					Monel, <u class="deco-bleu">c'est quoi ?</u>
+					Monel,&nbsp;
 				</div>
-				<div class="col"></div>
+				<div class="col text-nowrap txt-titre text-center">
+					<u class="deco-bleu">c'est quoi ?</u>
+				</div>
 			</div>
-			<div class="text-center w-75 txt-large">
-				<p class="font-weight-bold">Monel est un réseau d’échanges de biens et services entre entreprises
+			<div class="text-center txt-large">
+				<p class="font-weight-bold">Monel est un réseau d’échanges de biens et services entre<br>entreprises
 					de la Métropole Lilloise avec sa propre monnaie.
 				<p class="font-weight-normal">Il remet du sens et du local<br>au cœur des échanges entre entreprises.
 			</div>
-			<div class="text-center w-50 rectangle fond-bleu">
+			<div class="text-center rectangle fond-bleu">
 				<p>En rejoignant <b>Monel</b>, vous vous engagez dans<br>un réseau qui favorise les échanges <b>en local</b>.
 				<p>Un réseau qui agit pour <b>accroître la résilience</b><br>des entreprises, du territoire et de ses habitants.
 				<p>Un réseau qui agit pour <b>réduire notre impact sur la planète</b>.</p>
@@ -79,22 +87,21 @@
 		</div>
 
 		<div class="d-flex flex-column align-items-center fond-gris p-5" id="avantages">
-			<div class="row pb-4">
-				<div class="col m-auto">
-					<img src="img/cadenas.svg" class="float-right">
+			<div class="row no-gutters pb-4 justify-content-center">
+				<div class="col">
+					<img src="img/cadenas.svg" class="float-right mr-4">
 				</div>
-				<div class="col txt-titre text-nowrap">
-					Quels avantages
-				</div>
-				<div class="col"></div>
+				<div class="col txt-titre text-center text-nowrap">Quels&nbsp;</div>
+				<div class="col txt-titre text-center text-nowrap">avantages&nbsp;</div>
 				<div class="w-100"></div>
-				<div class="col"></div>
-				<div class="col txt-titre text-nowrap">
-					<u class="deco-blanc">pour votre structure </u>?
+				<div class="col txt-titre text-center text-nowrap">
+					<u class="deco-blanc">pour votre&nbsp;</u>
 				</div>
-				<div class="col"></div>
+				<div class="col txt-titre text-center text-nowrap">
+					<u class="deco-blanc">structure</u>?
+				</div>
 			</div>
-			<div class="d-flex">
+			<div class="row justify-content-center">
 				<div class="col rectangle-3d fond-blanc m-4">
 					<img class="mx-auto d-block m-4" src="img/bonhommes.svg">
 					<hr>
@@ -173,44 +180,44 @@
 					en circuits courts !
 					<img src="img/etoile-blanche.svg">
 			</div>
-			<div class="d-flex w-100 p-4">
-				<div class="col">
-					<div class="signet-container">
-						<img class="img-fluid signet-img" src="img/signet-fond.svg">
-						<img class="img-fluid signet-img" src="img/signet-contour.svg">
-						<img class="img-fluid signet-nb" src="img/1.svg">
-						<div class="signet-txt-container d-flex align-items-center w-100">
-							<div class="w-100 text-center signet-txt">
-								Vous êtes une entreprise<br>(EI, TPE, PME, ETI)<br>ou une association
-							</div>
-						</div>
+			<div class="row d-flex p-4">
+				<div class="col col-12 col-sm-12 col-md-6 col-lg-4" style="background-color: white;">
+					<!-- <div class="signet-container"> -->
+					<!-- <img class="signet-img" src="img/signet-fond.svg"> -->
+					<!-- <img class="signet-img" src="img/signet-contour.svg"> -->
+					<!-- <img class="signet-nb" src="img/1.svg"> -->
+					<!-- <div class="signet-txt-container d-flex align-items-center w-100"> -->
+					<div class="w-100 text-center signet-txt">
+						Vous êtes une entreprise<br>(EI, TPE, PME, ETI)<br>ou une association
 					</div>
+					<!-- </div> -->
+					<!-- </div> -->
 				</div>
-				<div class="col">
-					<div class="signet-container">
-						<img class="img-fluid signet-img" src="img/signet-fond.svg">
-						<img class="img-fluid signet-img" src="img/signet-contour.svg">
-						<img class="img-fluid signet-nb" src="img/2.svg">
-						<div class="signet-txt-container d-flex align-items-center w-100">
-							<div class="w-100 text-center signet-txt">
-								Votre siège social se trouve<br>sur la Métropole Lilloise<br>ou aux alentours
-							</div>
-						</div>
+				<div class="col col-12 col-sm-12 col-md-6 col-lg-4 style=" style="background-color:white">
+					<!-- <div class="signet-container"> -->
+					<!-- <img class="img-fluid signet-img" src="img/signet-fond.svg"> -->
+					<!-- <img class="img-fluid signet-img" src="img/signet-contour.svg"> -->
+					<!-- <img class="img-fluid signet-nb" src="img/2.svg"> -->
+					<!-- <div class="signet-txt-container d-flex align-items-center w-100"> -->
+					<div class="w-100 text-center signet-txt">
+						Votre siège social se trouve<br>sur la Métropole Lilloise<br>ou aux alentours
 					</div>
+					<!-- </div> -->
+					<!-- </div> -->
 				</div>
-				<div class="col">
-					<div class="signet-container">
-						<img class="img-fluid signet-img" src="img/signet-fond.svg">
-						<img class="img-fluid signet-img" src="img/signet-contour.svg">
-						<img class="img-fluid signet-nb" src="img/3.svg">
-						<div class="signet-txt-container d-flex align-items-center w-100">
-							<div class="w-100 text-center signet-txt">
-								Vous adhérez à notre charte<br>de valeurs qui souligne<br>l’importance d’un<br>développement
-								durable<br>et
-								responsable
-							</div>
-						</div>
+				<div class="col col-12 col-sm-12 col-md-6 col-lg-4 style=" style="background-color:white">
+					<!-- <div class="signet-container"> -->
+					<!-- <img class="img-fluid signet-img" src="img/signet-fond.svg"> -->
+					<!-- <img class="img-fluid signet-img" src="img/signet-contour.svg"> -->
+					<!-- <img class="img-fluid signet-nb" src="img/3.svg"> -->
+					<!-- <div class="signet-txt-container d-flex align-items-center w-100"> -->
+					<div class="w-100 text-center signet-txt">
+						Vous adhérez à notre charte<br>de valeurs qui souligne<br>l’importance d’un<br>développement
+						durable<br>et
+						responsable
 					</div>
+					<!-- </div> -->
+					<!-- </div> -->
 				</div>
 			</div>
 			<div>
@@ -395,9 +402,9 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 
+	<img src="img/fleche-retour.svg" onclick="topFunction()" id="scrollback-arrow">
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
