@@ -14,9 +14,10 @@ a:hover {
 .logo-background {
 	background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
 	background-size: cover;
+	background-repeat: no-repeat;
 	background-origin: border-box;
 	background-position-x: center;
-	background-position-y: -350px;
+	background-position-y: 28%;
 }
 
 .rectangle {
@@ -73,7 +74,7 @@ a:hover {
 	background: #7E92A9;
 	border: none;
 	border-radius: 73px;
-	color: #FFFFFF;
+	color: #FFFFFF !important;
 	padding: 5px 10px;
 }
 
