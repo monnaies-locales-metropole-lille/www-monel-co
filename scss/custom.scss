@@ -19,6 +19,7 @@
 	font-style: normal;
 }
 $font-family-sans-serif: "Fenwick";
+$font-size-base: 0.5rem;
 $enable-responsive-font-sizes: true;
 
 // Define our own theme colors
@@ -31,3 +32,12 @@ $navbar-light-color: $dark-blue;
 $navbar-light-hover-color: $dark-blue;
 
 @import "../bootstrap/scss/bootstrap";
+
+// Set responsive font sizes
+.headline {
+	@include font-size($font-size-base * 5);
+	font-weight: 700;
+}
+.large { @include font-size($font-size-base * 2.25); }
+body, .normal, .form-control { @include font-size($font-size-base * 1.75); }
+.small { @include font-size($font-size-base); }
