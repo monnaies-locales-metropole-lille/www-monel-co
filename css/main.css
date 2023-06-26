@@ -97,34 +97,11 @@ a:hover {
 }
 
 .signet-container {
-	position: relative;
-	height: 20em;
-}
-
-.signet-img {
-	position: absolute;
-	top: 8%;
-	left: 6%;
-	z-index: 1;
-}
-
-.signet-nb {
-	position: absolute;
-	left:43%;
-	z-index: 2;
-}
-
-.signet-txt-container {
-	position: absolute;
-	height: 70%;
-}
-.signet-txt {
-	/* position: absolute; */
-	/* top: 30%; */
-	/* left: 12%; */
-	font-weight: 300;
-	font-size: 1rem;
-	z-index: 2;
+	width: 20rem;
+	height: 20rem;
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
 }
 
 .list-arrow {
