@@ -146,6 +146,11 @@ input::placeholder {
 	width: 93%;
 }
 
+.form-input {
+	border-radius: 25px;
+	margin-bottom: 1rem;
+}
+
 #scrollback-arrow {
 	display: none;
   position: fixed;
