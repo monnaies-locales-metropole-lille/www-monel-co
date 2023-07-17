@@ -38,6 +38,6 @@ $navbar-light-hover-color: $dark-blue;
 	@include font-size($font-size-base * 5);
 	font-weight: 700;
 }
-.large { @include font-size($font-size-base * 2.25); }
-body, .normal, .form-control { @include font-size($font-size-base * 1.75); }
+.large { @include font-size($font-size-base * 3); }
+body, .normal, .form-control { @include font-size($font-size-base * 2.25); }
 .small { @include font-size($font-size-base * 1.25); }
