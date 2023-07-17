@@ -9261,11 +9261,16 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .large {
-  font-size: 1.125rem;
+  font-size: 1.5rem;
+}
+@media (max-width: 1200px) {
+  .large {
+    font-size: calc(1.275rem + 0.3vw);
+  }
 }
 
 body, .normal, .form-control {
-  font-size: 0.875rem;
+  font-size: 1.125rem;
 }
 
 .small {
