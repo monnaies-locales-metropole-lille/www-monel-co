@@ -12,6 +12,10 @@ a:hover {
 	text-decoration: none;
 }
 
+li {
+	margin-bottom: 1rem;
+}
+
 .logo-background {
 	background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
 	background-size: cover;
