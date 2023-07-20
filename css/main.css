@@ -164,3 +164,10 @@ input::placeholder {
 	cursor: pointer;
   z-index: 99;
 }
+
+/* Media query to block the width of the row after a certain breakpoint */
+@media (min-width: 1200px) {
+	.row {
+		max-width: 1200px; /* Set the maximum width for the container at this breakpoint */
+	}
+}
