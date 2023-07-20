@@ -170,4 +170,7 @@ input::placeholder {
 	.row {
 		max-width: 1200px; /* Set the maximum width for the container at this breakpoint */
 	}
+	.rectangle {
+		max-width: 1200px;
+	}
 }
