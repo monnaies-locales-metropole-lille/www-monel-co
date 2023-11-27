@@ -55,6 +55,10 @@ li {
 	background: #FFFFFF;
 }
 
+.fond-bleu-clair {
+  background: #B9DFE4;
+}
+
 .deco-bleu {
 	text-decoration-color: #A8D7DD;
 	text-decoration-thickness: 10%;
@@ -79,12 +83,13 @@ li {
 }
 
 .bouton-bleu-clair {
-	background: #7E92A9;
+	background: #7E92A9 !important;
 	border: none;
 	border-radius: 73px;
 	color: #FFFFFF !important;
-	padding: 5px 10px;
+	padding: 5px 10px !important;
 }
+
 
 .bouton-bleu-clair:hover {
 	background: #305780;
@@ -116,6 +121,10 @@ li {
 	list-style-image: url('../img/fleche-liste.svg');
 }
 
+.txt-small {
+  font-size: 0.75rem;
+}
+
 .txt-large {
 	font-size: 1.5rem;
 }
@@ -128,6 +137,10 @@ li {
 .txt-footer {
 	color: white;
 	font-size: 0.75rem;
+}
+
+.txt-bleu-clair {
+	color: #A8D7DD;
 }
 
 a.txt-footer:hover {
@@ -176,4 +189,88 @@ input::placeholder {
 	.rectangle {
 		max-width: 1200px;
 	}
+}
+
+.img-carrousel-container {
+  height: 70vh;
+  width: 98%;
+  overflow: hidden;
+}
+.img-carrousel {
+  border-radius: 73px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-prev-article {
+  width: 100%;
+  object-fit: cover;
+}
+
+.tag-bleu {
+	background: #305780;
+	border: none;
+	border-radius: 73px;
+	color: #FFFFFF;
+	padding: 0px 5px;
+}
+
+.tag-bleu-clair {
+	background: #B9DFE4 !important;
+	border: none;
+	border-radius: 73px;
+	color: #FFFFFF !important;
+	padding: 0px 5px !important;
+}
+
+.article-chapo {
+  font-style: italic;
+}
+
+.article-main  h2.spip {
+	line-height: 1.35;
+	font-weight: 400;
+  text-decoration: underline;
+	text-decoration-color: #A8D7DD;
+	text-decoration-thickness: 25%;
+}
+
+.article-main table.spip th {
+  border-width: 0.25em;
+  border-color: #A8D7DD;
+  border-style: solid none none none;
+  background: #FFFFFF;
+}
+
+.article-main table.spip td {
+  border: 0;
+  padding-bottom: 5em;
+  background: #FFFFFF;
+}
+
+.article-ps {
+	padding: 25px;
+  border-radius: 25px;
+}
+
+.article-ps h2.spip {
+	line-height: 1.35;
+	font-weight: 400;
+  text-decoration: underline;
+	text-decoration-color: #FFFFFF;
+	text-decoration-thickness: 25%;
+}
+
+.panel-link { 
+  position: absolute; 
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.tag-link {
+  z-index: 2;
 }

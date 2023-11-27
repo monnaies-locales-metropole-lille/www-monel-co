@@ -1,0 +1,81 @@
+[(#SET{id_rubrique_actu, 3})]
+<!doctype html>
+<html lang="fr">
+  <head>
+    <title>Monel - Au coeur de vos échanges</title>
+    #INCLURE{fond=inclure/head}
+  </head>
+  <body>
+    <div class="container-fluid">
+      #INCLURE{fond=inclure/nav}
+      <hr/>
+      <div id="article" class="mb-5">
+        <div id="titre" class="d-flex flex-column align-items-center">
+          <div class="row w-100 mw-100 justify-content-center">
+            <div class="col d-flex align-items-center">
+              <a href="#URL_PAGE{actu}">
+                <img src="#CHEMIN{img/fleche-left.svg}">
+              </a>
+            </div>
+          </div>
+        </div>
+        <BOUCLE_article(ARTICLES){statut=publie}{id_article}>
+          <div class="d-flex justify-content-center mt-3">
+            <div class="img-carrousel-container">
+              <img class="img-carrousel" src="[(#LOGO_ARTICLE_NORMAL|extraire_attribut{src})]"/>
+            </div>
+          </div>
+          <div class="mt-3 ml-3">
+            <div>
+              <!-- <span class="txt-bleu-clair mr-4">[(#DATE|affdate{'l d F Y'})]</span> -->
+              <span class="txt-bleu-clair mr-4">[(#DATE|affdate)]</span>
+              <BOUCLE_tag(MOTS){id_groupe=1}{id_article}>
+                <a class="small tag-bleu-clair mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
+                  <img class="mr-2" src="#CHEMIN{img/tag.svg}"/>#TITRE
+                </a>
+              </BOUCLE_tag>
+            </div>
+            <div class="">
+              <span class="large"><b>#TITRE</b></span>
+            </div>
+            <div class="normal article-chapo mt-3">
+              #CHAPO
+            </div>
+            <div class="normal article-main mt-5">
+              #TEXTE
+            </div>
+            <div class="fond-bleu-clair article-ps mt-5">
+              #PS
+            </div>
+          </div>
+        </BOUCLE_article>
+      </div>
+      <div id="mosaic" lass="d-flex flex-column align-items-center mt-5">
+        <div class="row w-100 mw-100 justify-content-center position-relative">
+          <BOUCLE_articles(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot?}{0,6}{par date}{inverse}{doublons}>
+            <div class="col-lg-3 col-md-4 col-sm-6 rectangle-3d fond-blanc m-4">
+              <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
+              <div class="position-absolute tag-link ml-3 mt-2">
+                <BOUCLE_tags(MOTS){id_groupe=1}{id_article}>
+                  <a class="tag-bleu small mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
+                    <img class="mr-1" src="#CHEMIN{img/tag.svg}"/>#TITRE
+                  </a>
+                </BOUCLE_tags>
+              </div>
+              <img class="img-prev-article" src="[(#LOGO_ARTICLE_SURVOL|extraire_attribut{src})]"/>
+              <div class="ml-2">
+                <div class="txt-bleu-clair small mt-2">[(#DATE|affdate{'l d F Y'})]</div>
+                <div class="mt-2 mb-2"><b>#TITRE</b></div>
+              </div>
+            </div>
+          </BOUCLE_articles>
+        </div>
+      </div>
+      <hr>
+      #INCLURE{fond=inclure/rejoindre}
+      #INCLURE{fond=inclure/infos}
+      #INCLURE{fond=inclure/footer}
+    </div>
+    #INCLURE{fond=inclure/scripts}
+  </body>
+</html>

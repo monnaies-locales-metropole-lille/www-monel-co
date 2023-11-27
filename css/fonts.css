@@ -1,0 +1,19 @@
+
+@font-face {
+	font-family: "Fenwick";
+	src: url("../fonts/Fenwick\ Light.ttf") format("truetype");
+	font-weight: 100;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Fenwick";
+	src: url("../fonts/Fenwick.ttf") format("truetype");
+	font-weight: 400;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Fenwick";
+	src: url("../fonts/Fenwick\ Bold.ttf") format("truetype");
+	font-weight: 700;
+	font-style: normal;
+}

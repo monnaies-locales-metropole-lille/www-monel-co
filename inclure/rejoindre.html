@@ -1,0 +1,41 @@
+<div class="d-flex flex-column align-items-center p-4" id="rejoindre">
+  <div class="row d-flex m-4 w-75">
+    <div class="col d-none d-md-block mt-2">
+      <img src="#CHEMIN{img/fleche.svg}" class="float-right" />
+    </div>
+    <div class="col-10">
+      <span class="font-weight-bold large">
+        Vous avez envie de nous rejoindre<br />
+        ou d’en savoir plus ?
+      </span>
+      <p class="normal font-weight-light">
+        Laissez nous vos coordonnées via ce formulaire<br />
+        ou contactez-nous à <b>contact@monel.co</b>
+      </p>
+    </div>
+  </div>
+  <div class="rectangle fond-bleu w-75">
+    <form id="contact-form" method="post" action="contact.php">
+      <div class="form-group text-center">
+        <input type="text" name="nom" class="form-control form-input" placeholder="Nom" />
+        <input type="text" name="prenom" class="form-control form-input" placeholder="Prénom" />
+        <input type="text" name="societe" class="form-control form-input" placeholder="Société" />
+        <input type="email" name="email" class="form-control form-input" placeholder="Email" />
+        <textarea name="message" class="form-control form-input" rows="5" placeholder="Message" ></textarea>
+        <input type="submit" class="bouton-blanc" value="Envoyer" />
+      </div>
+      <div class="messages"></div>
+    </form>
+  </div>
+  <div class="row d-flex m-4 w-75">
+    <div class="col">
+      <img src="#CHEMIN{img/point.svg}" class="float-right" />
+    </div>
+    <div class="col-10 normal">
+      <p>
+        <b>Vous pouvez aussi passer nous voir à Euratechnologies,</b><br />
+        Place de Saintignon quartier Bois Blancs.
+      </p>
+    </div>
+  </div>
+</div>
