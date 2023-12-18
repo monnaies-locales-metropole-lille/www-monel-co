@@ -7,7 +7,7 @@
   <body>
     <div class="container-fluid">
       #INCLURE{fond=inclure/nav}
-      <div class="d-none d-md-block" id="screen">
+      <div id="screen" class="d-none d-md-block pt-4">
         <div
           class="d-flex justify-content-center logo-background"
           style="height: 95vh">
@@ -16,367 +16,290 @@
           </h1>
         </div>
       </div>
-      <div class="d-flex flex-column align-items-center pt-5 pb-5" id="quoi">
-        <div class="row no-gutters pb-4 align-items-center">
-          <div class="col">
-            <img src="#CHEMIN{img/loupe.svg}" class="d-none d-md-block float-right mr-4"/>
-          </div>
-          <div class="col">
-            <h2 class="headline text-center text-nowrap">
-              Monel,&nbsp;<u class="deco-bleu">c'est quoi ?</u>
-            </h2>
-          </div>
-          <div class="col"></div>
-        </div>
-        <div class="pl-3 pr-3 text-center large">
-          <p class="font-weight-bold">
-            Monel est un réseau d’échanges de biens et services entre<br/>
-            entreprises de la Métropole Lilloise avec sa propre monnaie.
-          </p>
-          <span class="font-weight-normal">
-            Il remet du sens et du local<br/>
-            au cœur des échanges entre entreprises.
-          </span>
-        </div>
-        <div class="normal text-center rectangle fond-bleu">
-          <p>
-            En rejoignant <b>Monel</b>, vous vous engagez<br/>
-            dans un réseau qui favorise les échanges <b>en local</b>.
-          </p>
-          <p>
-            Un réseau qui agit pour <b>accroître la<br/>
-              résilience</b> des entreprises, du territoire et de ses habitants.
-          </p>
-          <p>
-            Un réseau qui agit pour <b>réduire notre impact sur la planète</b>.
-          </p>
-          Un réseau qui <b>rapproche les acteurs</b><br/>
-          économiques pour <b>favoriser l'innovation</b> et
-          <b>la circularité des échanges</b>.
-        </div>
-        <div class="pt-4">
-          <img class="m-2" src="#CHEMIN{img/fleche.svg}"/>
-          <a class="normal bouton-bleu" href="#rejoindre">Nous rejoindre</a>
-          <img class="m-2" src="#CHEMIN{img/etoiles.svg}"/>
-        </div>
-      </div>
-      <div class="d-flex flex-column align-items-center fond-gris p-5" id="avantages">
-        <div class="row no-gutters pb-4 justify-content-center">
-          <div class="col">
-            <img src="#CHEMIN{img/cadenas.svg}" class="d-none d-md-block float-right mr-4"/>
-          </div>
-          <div class="col">
-            <h2 class="headline text-center text-nowrap">Quels avantages</h2>
-          </div>
-          <div class="col"></div>
-          <div class="w-100"></div>
-          <div class="col headline text-center text-nowrap">
-            <u class="deco-blanc">pour votre structure&nbsp;</u>?
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col rectangle-3d fond-blanc m-4">
-            <img class="mx-auto d-block m-4" src="#CHEMIN{img/bonhommes.svg}"/>
-            <hr/>
-            <div class="text-center">
-              <p class="large font-weight-bold">
-                Développez votre activité localement avec des acteurs de
-                confiance
-              </p>
+      <div id="quoi" class="container">
+        <div class="d-flex flex-column align-items-center py-5">
+          <div class="row no-gutters pb-4 align-items-center">
+            <div class="col">
+              <img src="#CHEMIN{img/loupe.svg}" class="d-none d-md-block float-right mr-4"/>
             </div>
-            <hr/>
-            <ul class="list-arrow normal font-weight-light">
-              <li>
-                Des clients proches de chez vous qui partagent vos valeurs
-              </li>
-              <li>Une chaîne d’approvisionnement raccourcie et renforcée</li>
-              <li>Valorisation de vos actifs sous-utilisé</li>
-            </ul>
-          </div>
-          <div class="col rectangle-3d fond-blanc m-4">
-            <img class="mx-auto d-block" style="margin: 2.3rem" src="#CHEMIN{img/piece+ronds.svg}"/>
-            <hr/>
-            <div class="text-center">
-              <p class="large font-weight-bold">
-                Profitez d’une ligne de trésorerie à taux zéro et de délais de
-                paiement instantanés
-              </p>
+            <div class="col">
+              <h2 class="headline text-center text-nowrap">
+                Monel,&nbsp;<u class="deco-bleu">c'est quoi ?</u>
+              </h2>
             </div>
-            <hr/>
-            <ul class="list-arrow normal font-weight-light">
-              <li>Stabilité financière renforcée</li>
-              <li>Augmentation des capacités d’investissement</li>
-            </ul>
-            <img class="mx-auto d-block m-4" src="#CHEMIN{img/etoile-bleu.svg}"/>
+            <div class="col"></div>
           </div>
-          <div class="col rectangle-3d fond-blanc m-4">
-            <img class="mx-auto d-block m-4" src="#CHEMIN{img/arbres.svg}"/>
-            <hr/>
-            <div class="text-center">
-              <p class="large font-weight-bold">
-                Concrétisez vos engagements pour un développement responsable et
-                durable
-              </p>
-            </div>
-            <hr/>
-            <ul class="list-arrow normal font-weight-light">
-              <li>
-                Démarche RSE ancrée<br/>
-                sur le local
-              </li>
-              <li>Contribution au fond 1% planète</li>
-            </ul>
-            <img class="mx-auto d-block m-4" src="#CHEMIN{img/etoile-bleu.svg}"/>
+          <div class="pl-3 pr-3 text-center large">
+            <p class="font-weight-bold">
+              Monel est un réseau d’échanges de biens et services entre<br/>
+              entreprises de la Métropole Lilloise avec sa propre monnaie.
+            </p>
+            <span class="font-weight-normal">
+              Il remet du sens et du local<br/>
+              au cœur des échanges entre entreprises.
+            </span>
+          </div>
+          <div class="normal text-center rectangle fond-bleu">
+            <p>
+              En rejoignant <b>Monel</b>, vous vous engagez<br/>
+              dans un réseau qui favorise les échanges <b>en local</b>.
+            </p>
+            <p>
+              Un réseau qui agit pour <b>accroître la<br/>
+                résilience</b> des entreprises, du territoire et de ses habitants.
+            </p>
+            <p>
+              Un réseau qui agit pour <b>réduire notre impact sur la planète</b>.
+            </p>
+            Un réseau qui <b>rapproche les acteurs</b><br/>
+            économiques pour <b>favoriser l'innovation</b> et
+            <b>la circularité des échanges</b>.
+          </div>
+          <div class="pt-4">
+            <img class="m-2" src="#CHEMIN{img/fleche.svg}"/>
+            <a class="normal bouton-bleu" href="#rejoindre">Nous rejoindre</a>
+            <img class="m-2" src="#CHEMIN{img/etoiles.svg}"/>
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column align-items-center fond-bleu pt-5 pb-5" id="qui">
-        <div class="row w-100 no-gutters pb-4 align-items-center">
-          <div class="col col-2 col-sm-3">
-            <img src="#CHEMIN{img/valide.svg}" class="d-none d-md-block float-right"/>
+      <div id="avantages" class="fond-gris">
+        <div class="container">
+          <div class="d-flex flex-column align-items-center py-5">
+            <div class="row no-gutters mb-4 justify-content-center">
+              <h2 class="headline text-center text-nowrap">
+                <img src="#CHEMIN{img/cadenas.svg}"/>
+                <span class="my-3">Quels avantages</span>
+                <br>
+                <u class="deco-blanc">pour votre structure&nbsp;</u>?
+              </h2>
+            </div>
+            <div class="row no-gutters mt-4 justify-content-center">
+              <div class="col rectangle-3d fond-blanc m-2">
+                <img class="mx-auto d-block m-4" src="#CHEMIN{img/bonhommes.svg}"/>
+                <hr/>
+                <div class="text-center px-2">
+                  <p class="large font-weight-bold">
+                    Développez votre activité localement avec des acteurs de
+                    confiance
+                  </p>
+                </div>
+                <hr/>
+                <ul class="avantages list-arrow normal font-weight-light">
+                  <li class="avantages">
+                    Des clients proches de chez vous qui partagent vos valeurs
+                  </li class="avantages">
+                  <li class="avantages">Une chaîne d’approvisionnement raccourcie et renforcée</li>
+                  <li class="avantages">Valorisation de vos actifs sous-utilisé</li>
+                </ul>
+              </div>
+              <div class="col rectangle-3d fond-blanc m-2">
+                <img class="mx-auto d-block" style="margin: 2.3rem" src="#CHEMIN{img/piece+ronds.svg}"/>
+                <hr/>
+                <div class="text-center px-2">
+                  <p class="large font-weight-bold">
+                    Profitez d’une ligne de trésorerie à taux zéro et de délais de
+                    paiement instantanés
+                  </p>
+                </div>
+                <hr/>
+                <ul class="avantages list-arrow normal font-weight-light">
+                  <li class="avantages">Stabilité financière renforcée</li>
+                  <li class="avantages">Augmentation des capacités d’investissement</li>
+                </ul>
+                <img class="mx-auto d-block m-4" src="#CHEMIN{img/etoile-bleu.svg}"/>
+              </div>
+              <div class="col rectangle-3d fond-blanc m-2">
+                <img class="mx-auto d-block m-4" src="#CHEMIN{img/arbres.svg}"/>
+                <hr/>
+                <div class="text-center px-2">
+                  <p class="large font-weight-bold">
+                    Concrétisez vos engagements pour un développement responsable et
+                    durable
+                  </p>
+                </div>
+                <hr/>
+                <ul class="avantages list-arrow normal font-weight-light">
+                  <li class="avantages">
+                    Démarche RSE ancrée<br/>
+                    sur le local
+                  </li>
+                  <li class="avantages">Contribution au fond 1% planète</li>
+                </ul>
+                <img class="mx-auto d-block m-4" src="#CHEMIN{img/etoile-bleu.svg}"/>
+              </div>
+            </div>
           </div>
-          <div class="col col-8 col-sm-6">
+        </div>
+      </div>
+      <div id="qui" class="fond-bleu">
+        <div class="container">
+          <div class="d-flex flex-column align-items-center py-5">
+            <div class="row no-gutters mb-4 justify-content-center">
+              <h2 class="headline text-center">
+                <img src="#CHEMIN{img/valide.svg}"/>
+                <span class="my-3">Qui <u class="deco-blanc">peut utiliser Monel ?</u></span>
+              </h2>
+            </div>
+            <div class="row no-gutters my-4 justify-content-center">
+              <div class="font-weight-bold large text-center px-3">
+                Toutes les organisations qui veulent faire avancer<br/>
+                les choses en réalisant une partie de leurs échanges<br/>
+                <img src="#CHEMIN{img/etoile-blanche.svg}" class="d-none d-md-inline"/>
+                en circuits courts !
+                <img src="#CHEMIN{img/etoile-blanche.svg}" class="d-none d-md-inline"/>
+              </div>
+            </div>
+            <div class="row no-gutters my-4 justify-content-center w-100">
+              <div class="col col-12 col-lg signet-container d-flex align-items-center justify-content-center m-2" style="background-image: url(&quot;#CHEMIN{img/signet1.svg}&quot;);">
+                <div class="text-center">
+                  Vous êtes une entreprise<br/>
+                  (EI, TPE, PME, ETI)<br/>
+                  ou une association
+                </div>
+              </div>
+              <div class="col col-12 col-lg signet-container d-flex align-items-center justify-content-center m-2" style="background-image: url(&quot;#CHEMIN{img/signet2.svg}&quot;);">
+                <div class="text-center">
+                  Votre siège social se trouve<br/>
+                  sur la Métropole Lilloise<br/>
+                  ou aux alentours
+                </div>
+              </div>
+              <div class="col col-12 col-lg signet-container d-flex align-items-center justify-content-center m-2" style="background-image: url(&quot;#CHEMIN{img/signet3.svg}&quot;);">
+                <div class="text-center">
+                  Vous adhérez à notre charte<br/>
+                  de valeurs qui souligne<br/>
+                  l’importance d’un<br/>
+                  développement durable<br/>
+                  et responsable
+                </div>
+              </div>
+            </div>
+            <div class="row no-gutters mt-4 justify-content-center">
+              <img class="m-2" src="#CHEMIN{img/fleche-blanche.svg}"/>
+              <a class="normal bouton-bleu" href="#rejoindre">Nous rejoindre</a>
+              <img class="m-2" src="#CHEMIN{img/etoiles.svg}"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="team" class="container">
+        <div class="d-flex flex-column align-items-center py-5">
+          <div class="row no-gutters mb-4 justify-content-center">
             <h2 class="headline text-center">
-              Qui <u class="deco-blanc">peut utiliser Monel ?</u>
-            </h2>
-          </div>
-          <div class="col col-2 col-sm-3"></div>
-        </div>
-        <div class="font-weight-bold large text-center pl-3 pr-3">
-          Toutes les organisations qui veulent faire avancer<br/>
-          les choses en réalisant une partie de leurs échanges<br/>
-          <img src="#CHEMIN{img/etoile-blanche.svg}" class="d-none d-md-inline"/>
-          en circuits courts !
-          <img src="#CHEMIN{img/etoile-blanche.svg}" class="d-none d-md-inline"/>
-        </div>
-        <div class="row d-flex justify-content-center p-3">
-          <div
-            class="col col-12 col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
-            <div
-              class="signet-container d-flex justify-content-center align-items-center"
-              style="
-                background-image: url(&quot;#CHEMIN{img/signet1.svg}&quot;);
-              ">
-              <div class="text-center">
-                Vous êtes une entreprise<br/>
-                (EI, TPE, PME, ETI)<br/>
-                ou une association
-              </div>
-            </div>
-          </div>
-          <div
-            class="col col-12 col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
-            <div
-              class="signet-container d-flex justify-content-center align-items-center"
-              style="
-                background-image: url(&quot;#CHEMIN{img/signet2.svg}&quot;);
-              ">
-              <div class="text-center">
-                Votre siège social se trouve<br/>
-                sur la Métropole Lilloise<br/>
-                ou aux alentours
-              </div>
-            </div>
-          </div>
-          <div
-            class="col col-12 col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
-            <div
-              class="signet-container d-flex justify-content-center align-items-center"
-              style="
-                background-image: url(&quot;#CHEMIN{img/signet3.svg}&quot;);
-              ">
-              <div class="text-center">
-                Vous adhérez à notre charte<br/>
-                de valeurs qui souligne<br/>
-                l’importance d’un<br/>
-                développement durable<br/>
-                et responsable
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img class="m-2" src="#CHEMIN{img/fleche-blanche.svg}"/>
-          <a class="normal bouton-bleu" href="#rejoindre">Nous rejoindre</a>
-          <img class="m-2" src="#CHEMIN{img/etoiles.svg}"/>
-        </div>
-      </div>
-      <div class="d-flex flex-column align-items-center p-4" id="team">
-        <div class="row m-4">
-          <div class="col">
-            <img src="#CHEMIN{img/bonhomme.svg}" class="d-none d-md-block"/>
-          </div>
-          <div class="col">
-            <h2 class="headline text-center text-nowrap">
+              <img src="#CHEMIN{img/bonhomme.svg}"/>
+              <!-- <span class="my-2">Qu<u class="deco-bleu">i sommes-nous ?</u></span> -->
               Qu<u class="deco-bleu">i sommes-nous ?</u>
             </h2>
           </div>
-          <div class="col"></div>
-        </div>
-        <div>
-          <p class="font-weight-bold large text-center">
-            Monel est un service porté par<br/>
-            l’association Monnaies Locales Métropole Lilloise (MLML).
-          </p>
-        </div>
-        <div class="normal font-weight-light text-center">
-          <hr/>
-          MLML réunit depuis sa création en 2020 des <b>entreprises, des citoyens et des collectivités<br/>
-            locales</b> partageant les mêmes objectifs :<br/>
-          <b>redonner du sens à nos échanges économiques</b> en s’appuyant sur l’outil monétaire.
-          <hr/>
-        </div>
-        <div class="d-flex row">
-          <div class="col text-center portrait">
-            <img class="rounded-circle portrait" src="#CHEMIN{img/Perrick2.png}" alt="Photo de Perrick"/>
-            <div class="normal font-weight-bold">Perrick Penet</div>
+          <div class="row no-gutters my-4 justify-content-center">
+            <div class="font-weight-bold large text-center">
+              Monel est un service porté par<br/>
+              l’association Monnaies Locales Métropole Lilloise (MLML).
+            </div>
           </div>
-          <div class="col text-center portrait">
-            <img class="rounded-circle portrait" src="#CHEMIN{img/Chloe2.png}" alt="Photo de Chloé"/>
-            <div class="normal font-weight-bold">Chloé Philippot</div>
+          <div class="row no-gutters justify-content-center">
+            <div class="normal font-weight-light text-center">
+              <hr/>
+              MLML réunit depuis sa création en 2020 des <b>entreprises, des citoyens et des collectivités<br/>
+                locales</b> partageant les mêmes objectifs :<br/>
+              <b>redonner du sens à nos échanges économiques</b> en s’appuyant sur l’outil monétaire.
+              <hr/>
+            </div>
           </div>
-          <div class="col text-center portrait">
-            <img class="rounded-circle portrait" src="#CHEMIN{img/Jean2.png}" alt="Photo de Jean"/>
-            <div class="normal font-weight-bold">Jean Fauvet</div>
-          </div>
-        </div>
-        <div class="d-flex row">
-          <div class="col text-center portrait">
-            <img class="rounded-circle portrait" src="#CHEMIN{img/Nicolas2.png}" alt="Photo de Nicolas"/>
-            <div class="normal font-weight-bold">Nicolas Gantois</div>
-          </div>
-          <div class="col text-center portrait">
-            <img class="rounded-circle portrait" src="#CHEMIN{img/Remi2.png}" alt="Photo de Rémi"/>
-            <div class="normal font-weight-bold">Rémi Nivet</div>
+          <div class="row no-gutters justify-content-center">
+            <div class="col d-flex flex-column align-items-center justify-content-center m-4">
+              <img class="rounded-circle portrait" src="#CHEMIN{img/Perrick2.png}" alt="Photo de Perrick"/>
+              <div class="normal font-weight-bold mt-2">Perrick Penet</div>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center m-4">
+              <img class="rounded-circle portrait" src="#CHEMIN{img/Chloe2.png}" alt="Photo de Chloé"/>
+              <div class="normal font-weight-bold mt-2">Chloé Philippot</div>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center m-4">
+              <img class="rounded-circle portrait" src="#CHEMIN{img/Jean2.png}" alt="Photo de Jean"/>
+              <div class="normal font-weight-bold mt-2">Jean Fauvet</div>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center m-4">
+              <img class="rounded-circle portrait" src="#CHEMIN{img/Nicolas2.png}" alt="Photo de Nicolas"/>
+              <div class="normal font-weight-bold mt-2">Nicolas Gantois</div>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center m-4">
+              <img class="rounded-circle portrait" src="#CHEMIN{img/Remi2.png}" alt="Photo de Rémi"/>
+              <div class="normal font-weight-bold mt-2">Rémi Nivet</div>
+            </div>
           </div>
         </div>
       </div>
       #INCLURE{fond=inclure/rejoindre}
       #INCLURE{fond=inclure/infos}
-      <div id="adherents" class="d-flex flex-column align-items-center pt-5 pb-5">
-        <div class="row no-gutters pb-4 justify-content-center">
-          <div class="col d-flex align-items-center justify-content-end">
-            <img src="#CHEMIN{img/ronds.svg}" class="d-none d-md-block mr-4"/>
-          </div>
-          <div class="col headline text-center text-nowrap">
-            Ils sont déjà engagés
-          </div>
-          <div class="col"></div>
-          <div class="w-100"></div>
-          <div class="col headline text-center text-nowrap">avec Monel</div>
-        </div>
-        <div class="row mw-100">
-          <div class="cozal d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-moduo.svg}"/>
-          </div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-easi.svg}"/>
-          </div>
-          <div class="d-block d-sm-none w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-happy.svg}"/>
-          </div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-wokine.svg}"/>
-          </div>
-          <div class="d-block d-sm-none w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-pauci.svg}"/>
-          </div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-mlml.svg}"/>
-          </div>
-          <div class="d-block d-sm-none w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-bh.svg}"/>
-          </div>
-          <div class="d-none d-md-block w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-choisis.svg}"/>
-          </div>
-          <div class="d-block d-sm-none w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-graine.svg}"/>
-          </div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-tokici.svg}"/>
-          </div>
-          <div class="d-block d-sm-none w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-noparking.svg}"/>
-          </div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-besquare.svg}"/>
-          </div>
-          <div class="d-block d-sm-none w-100"></div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-share&smile.svg}"/>
-          </div>
-          <div class="col d-flex p-3">
-            <img class="mx-auto" src="#CHEMIN{img/logo-mlaconstellation.svg}"/>
-          </div>
-        </div>
-      </div>
-      <div class="row no-gutters justify-content-center w-100 mw-100">
-        <div class="col m-4">
-          <div class="row d-flex flex-column">
-            <div class="col mb-3">
-              <img src="#CHEMIN{img/logo-monel-blanc.svg}"/>
+      <div id="adherents" class="container">
+        <div class="d-flex flex-column align-items-center py-5">
+          <div class="row no-gutters pb-4 justify-content-center">
+            <div class="col d-flex align-items-center justify-content-end">
+              <img src="#CHEMIN{img/ronds.svg}" class="d-none d-md-block mr-4"/>
             </div>
-            <div class="col small text-white mb-3">
-              Monel est un produit de l’association<br/>
-              Monnaies Locales Métropole Lilloise.
+            <div class="col headline text-center text-nowrap">
+              Ils sont déjà engagés
             </div>
-            <div class="col">
-              <a href="https://twitter.com/monel_co"
-                  ><img src="#CHEMIN{img/twitter.svg}"
-               /></a>
-              <a href="https://linkedin.com/company/monel-co"
-                  ><img src="#CHEMIN{img/linkedin.svg}"
-               /></a>
-              <a class="small text-white" href="mailto:contact@monel.co"
-                  >contact@monel.co</a
-                >
-            </div>
-          </div>
-        </div>
-        <div class="col m-4">
-          <div class="row d-flex flex-column">
-            <div class="col small text-white mb-4">
-              <b>Euratechnologies</b><br/>
-              Place de Saintignon, 165 Av. de Bretagne<br/>
-              59000 Lille
-            </div>
-            <div class="col small text-white">
-              <b>Siège social</b><br/>
-              235 Boulevard Paul Painlevé<br/>
-              59000 Lille
-            </div>
-          </div>
-        </div>
-        <div class="col m-4">
-          <div class="row no-gutters d-flex justify-content-start mb-3">
-            <div class="col-3 mx-auto m-2">
-              <img src="#CHEMIN{img/lille.svg}"/>
-            </div>
-            <div class="col-6 mx-auto m-2">
-              <img src="#CHEMIN{img/mel.svg}"/>
-            </div>
-            <div class="col-3 mx-auto m-2"></div>
+            <div class="col"></div>
             <div class="w-100"></div>
-            <div class="col-3 mx-auto m-2">
-              <img src="#CHEMIN{img/rev.svg}"/>
-            </div>
-            <div class="col-6 mx-auto m-2">
-              <img src="#CHEMIN{img/logo-euratech-white.svg}" style="max-width: 200px"/>
-            </div>
-            <div class="col-3 mx-auto m-2"></div>
+            <div class="col headline text-center text-nowrap">avec Monel</div>
           </div>
-          <div class="small text-white">Photo : © Guillaume Hankenne</div>
+          <div class="row no-gutters pt-4 w-100">
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-moduo.svg}"/>
+            </div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-easi.svg}"/>
+            </div>
+            <div class="d-block d-sm-none w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-happy.svg}"/>
+            </div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-wokine.svg}"/>
+            </div>
+            <div class="d-block d-sm-none w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-pauci.svg}"/>
+            </div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-mlml.svg}"/>
+            </div>
+            <div class="d-block d-sm-none w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-bh.svg}"/>
+            </div>
+            <div class="d-none d-md-block w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-choisis.svg}"/>
+            </div>
+            <div class="d-block d-sm-none w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-graine.svg}"/>
+            </div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-tokici.svg}"/>
+            </div>
+            <div class="d-block d-sm-none w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-noparking.svg}"/>
+            </div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-besquare.svg}"/>
+            </div>
+            <div class="d-block d-sm-none w-100"></div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-share&smile.svg}"/>
+            </div>
+            <div class="col d-flex py-3">
+              <img class="mx-auto" src="#CHEMIN{img/logo-mlaconstellation.svg}"/>
+            </div>
+          </div>
         </div>
       </div>
+      #INCLURE{fond=inclure/footer}
     </div>
-    #INCLURE{fond=inclure/footer}
   </div>
   <img src="#CHEMIN{img/fleche-retour.svg}" onclick="topFunction()" id="scrollback-arrow"/>
   #INCLURE{fond=inclure/scripts}

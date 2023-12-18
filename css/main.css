@@ -3,56 +3,72 @@ html {
 }
 
 body {
-	font-weight: 100;
-	line-height: 1.35;
+  font-weight: 100;
+  line-height: 1.35;
+}
+
+h2 {
+  margin-bottom: 0;
+  line-height: 1.35;
 }
 
 b {
-	font-weight: 700;
+  font-weight: 700;
 }
 
 a:hover {
-	text-decoration: none;
+  text-decoration: none;
+  background: transparent;
 }
 
-li {
-	margin-bottom: 1rem;
+a:focus {
+  text-decoration: none;
+  background: transparent;
+}
+
+ul.avantages {
+  margin-left: 25px;
+  margin-right: 15px;
+}
+
+li.avantages {
+  margin-bottom: 1rem;
 }
 
 .logo-background {
-	background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-origin: border-box;
-	background-position-x: center;
-	background-position-y: 28%;
+  background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  background-position-x: center;
+  background-position-y: 28%;
 }
 
 .rectangle {
-	padding: 25px;
-	margin: 25px;
-	border-radius: 25px;
+  padding: 25px;
+  margin: 25px;
+  border-radius: 25px;
 }
 
 .rectangle-3d {
-	box-shadow: 6px 6px 0px #7E9BB1;
-	border-radius: 25px;
+  box-shadow: 6px 6px 0px #7E9BB1;
+  border-radius: 25px;
 }
 
 .fond-bleu {
-	background: #A8D7DD;
+  background: #A8D7DD;
 }
 
 .fond-bleu-fonce {
-	background: #305780;
+  background: #305780;
 }
 
 .fond-gris {
-	background: #DDDDDD;
+  background: #DDDDDD;
 }
 
 .fond-blanc {
-	background: #FFFFFF;
+  background: #FFFFFF;
 }
 
 .fond-bleu-clair {
@@ -60,65 +76,65 @@ li {
 }
 
 .deco-bleu {
-	text-decoration-color: #A8D7DD;
-	text-decoration-thickness: 10%;
+  text-decoration-color: #A8D7DD;
+  text-decoration-thickness: 10%;
 }
 
 .deco-blanc {
-	text-decoration-color: #FFFFFF;
-	text-decoration-thickness: 10%;
+  text-decoration-color: #FFFFFF;
+  text-decoration-thickness: 10%;
 }
 
 .bouton-bleu {
-	background: #305780;
-	border: none;
-	border-radius: 73px;
-	color: #FFFFFF;
-	padding: 20px 20px;
+  background: #305780;
+  border: none;
+  border-radius: 73px;
+  color: #FFFFFF;
+  padding: 20px 20px;
 }
 
 .bouton-bleu:hover {
-	color: #FFFFFF;
-	box-shadow: 3px 4px #7E92A9;
+  background: #305780;
+  color: #FFFFFF;
+  box-shadow: 3px 4px #7E92A9;
 }
 
 .bouton-bleu-clair {
-	background: #7E92A9 !important;
-	border: none;
-	border-radius: 73px;
-	color: #FFFFFF !important;
-	padding: 5px 10px !important;
+  background: #7E92A9 !important;
+  border: none;
+  border-radius: 73px;
+  color: #FFFFFF !important;
+  padding: 5px 10px !important;
 }
 
 
 .bouton-bleu-clair:hover {
-	background: #305780;
-	color: #FFFFFF;
+  background: #305780 !important;
+  color: #FFFFFF !important;
 }
 
 .bouton-blanc {
-	border: none;
-	border-radius: 73px;
-	padding: 15px 30px;
-	background: #FFFFFF;
-	color: #305780;
+  border: none;
+  border-radius: 73px;
+  padding: 15px 30px;
+  background: #FFFFFF;
+  color: #305780;
 }
 
 .bouton-blanc:hover {
-	color: #305780;
-	box-shadow: 3px 4px #7E92A9;
+  color: #305780;
+  box-shadow: 3px 4px #7E92A9;
 }
 
 .signet-container {
-	width: 20rem;
-	height: 20rem;
-	background-position: center;
-	background-size: contain;
-	background-repeat: no-repeat;
+  height: 15rem;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .list-arrow {
-	list-style-image: url('../img/fleche-liste.svg');
+  list-style-image: url('../img/fleche-liste.svg');
 }
 
 .txt-small {
@@ -126,69 +142,64 @@ li {
 }
 
 .txt-large {
-	font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .txt-titre {
-	font-size: 2.5rem;
-	font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 .txt-footer {
-	color: white;
-	font-size: 0.75rem;
+  color: white;
+  font-size: 0.75rem;
 }
 
 .txt-bleu-clair {
-	color: #A8D7DD;
+  color: #A8D7DD;
 }
 
 a.txt-footer:hover {
-	color: white;
+  color: white;
 }
 
 img.portrait {
-	width: 150px;
-}
-
-div.portrait {
-	margin-left: 3rem;
-	margin-right: 3rem;
-	margin-top: 1rem;
-	margin-bottom: 1rem;
+  width: 15rem;
 }
 
 input::placeholder {
-	color: red;
-	opacity: 1;
+  color: red;
+  opacity: 1;
 }
 
 .form-custom {
-	width: 93%;
+  width: 93%;
 }
 
 .form-input {
-	border-radius: 25px;
-	margin-bottom: 1rem;
+  border-radius: 25px;
+  margin-bottom: 1rem;
 }
 
 #scrollback-arrow {
-	display: none;
+  display: none;
   position: fixed;
   bottom: 60px;
   right: 60px;
-	cursor: pointer;
+  cursor: pointer;
   z-index: 99;
 }
 
 /* Media query to block the width of the row after a certain breakpoint */
 @media (min-width: 1200px) {
-	.row {
-		max-width: 1200px; /* Set the maximum width for the container at this breakpoint */
-	}
-	.rectangle {
-		max-width: 1200px;
-	}
+  .row {
+    max-width: 1200px;
+    /* Set the maximum width for the container at this breakpoint */
+  }
+
+  .rectangle {
+    max-width: 1200px;
+  }
 }
 
 .img-carrousel-container {
@@ -196,6 +207,7 @@ input::placeholder {
   width: 98%;
   overflow: hidden;
 }
+
 .img-carrousel {
   border-radius: 73px;
   width: 100%;
@@ -205,35 +217,35 @@ input::placeholder {
 
 .img-prev-article {
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .tag-bleu {
-	background: #305780;
-	border: none;
-	border-radius: 73px;
-	color: #FFFFFF;
-	padding: 0px 5px;
+  background: #305780;
+  border: none;
+  border-radius: 73px;
+  color: #FFFFFF;
+  padding: 0px 5px;
 }
 
 .tag-bleu-clair {
-	background: #B9DFE4 !important;
-	border: none;
-	border-radius: 73px;
-	color: #FFFFFF !important;
-	padding: 0px 5px !important;
+  background: #B9DFE4 !important;
+  border: none;
+  border-radius: 73px;
+  color: #FFFFFF !important;
+  padding: 0px 5px !important;
 }
 
 .article-chapo {
   font-style: italic;
 }
 
-.article-main  h2.spip {
-	line-height: 1.35;
-	font-weight: 400;
+.article-main h2.spip {
+  line-height: 1.35;
+  font-weight: 400;
   text-decoration: underline;
-	text-decoration-color: #A8D7DD;
-	text-decoration-thickness: 25%;
+  text-decoration-color: #A8D7DD;
+  text-decoration-thickness: 25%;
 }
 
 .article-main table.spip th {
@@ -250,20 +262,20 @@ input::placeholder {
 }
 
 .article-ps {
-	padding: 25px;
+  padding: 25px;
   border-radius: 25px;
 }
 
 .article-ps h2.spip {
-	line-height: 1.35;
-	font-weight: 400;
+  line-height: 1.35;
+  font-weight: 400;
   text-decoration: underline;
-	text-decoration-color: #FFFFFF;
-	text-decoration-thickness: 25%;
+  text-decoration-color: #FFFFFF;
+  text-decoration-thickness: 25%;
 }
 
-.panel-link { 
-  position: absolute; 
+.panel-link {
+  position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
