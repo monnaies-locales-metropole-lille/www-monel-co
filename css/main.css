@@ -47,12 +47,12 @@ li.avantages {
 .rectangle {
   padding: 25px;
   margin: 25px;
-  border-radius: 25px;
+  border-radius: 1.5625rem;
 }
 
 .rectangle-3d {
   box-shadow: 6px 6px 0px #7E9BB1;
-  border-radius: 25px;
+  border-radius: 1.5625rem;
 }
 
 .fond-bleu {
@@ -88,7 +88,7 @@ li.avantages {
 .bouton-bleu {
   background: #305780;
   border: none;
-  border-radius: 73px;
+  border-radius: 4.5625rem;
   color: #FFFFFF;
   padding: 20px 20px;
 }
@@ -102,7 +102,7 @@ li.avantages {
 .bouton-bleu-clair {
   background: #7E92A9 !important;
   border: none;
-  border-radius: 73px;
+  border-radius: 1.5625rem;
   color: #FFFFFF !important;
   padding: 5px 10px !important;
 }
@@ -114,8 +114,9 @@ li.avantages {
 }
 
 .bouton-blanc {
+  height: 3.125rem;
   border: none;
-  border-radius: 73px;
+  border-radius: 1.5625rem;
   padding: 15px 30px;
   background: #FFFFFF;
   color: #305780;
@@ -177,7 +178,7 @@ input::placeholder {
 }
 
 .form-input {
-  border-radius: 25px;
+  border-radius: 1.5625rem;
   margin-bottom: 1rem;
 }
 
@@ -209,7 +210,7 @@ input::placeholder {
 }
 
 .img-carrousel {
-  border-radius: 73px;
+  border-radius: 1.5625rem;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -217,13 +218,16 @@ input::placeholder {
 
 .img-prev-article {
   width: 100%;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1.5625rem 1.5625rem 0rem 0rem;
 }
 
 .tag-bleu {
   background: #305780;
   border: none;
-  border-radius: 73px;
+  border-radius: 1.5625rem;
   color: #FFFFFF;
   padding: 0px 5px;
 }
@@ -231,7 +235,7 @@ input::placeholder {
 .tag-bleu-clair {
   background: #B9DFE4 !important;
   border: none;
-  border-radius: 73px;
+  border-radius: 1.5625rem;
   color: #FFFFFF !important;
   padding: 0px 5px !important;
 }
@@ -246,6 +250,7 @@ input::placeholder {
   text-decoration: underline;
   text-decoration-color: #A8D7DD;
   text-decoration-thickness: 25%;
+  text-decoration-skip-ink: none;
 }
 
 .article-main table.spip th {
@@ -261,9 +266,17 @@ input::placeholder {
   background: #FFFFFF;
 }
 
+a.spip_out {
+  text-decoration: underline;
+}
+
+a.spip_out::after {
+  content: "";
+}
+
 .article-ps {
   padding: 25px;
-  border-radius: 25px;
+  border-radius: 1.5625rem;
 }
 
 .article-ps h2.spip {
@@ -272,6 +285,7 @@ input::placeholder {
   text-decoration: underline;
   text-decoration-color: #FFFFFF;
   text-decoration-thickness: 25%;
+  text-decoration-skip-ink: none;
 }
 
 .panel-link {

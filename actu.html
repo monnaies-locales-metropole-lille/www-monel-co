@@ -1,4 +1,5 @@
 [(#SET{id_rubrique_actu, 3})]
+[(#SET{id_tag_carousel, 4})]
 <!doctype html>
 <html lang="fr">
   <head>
@@ -29,7 +30,7 @@
       <div id="carousel" class="container">
         <div id="carouselArticles" class="carousel slide [(#ENV{id_mot}|?{collapse,})]" data-ride="carousel">
           <div class="carousel-inner">
-            <BOUCLE_carrousel(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot=4}{par date}{inverse}{doublons}>
+            <BOUCLE_carrousel(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot=#GET{id_tag_carousel}}{par date}{inverse}>
               <div class="carousel-item [(#COMPTEUR_BOUCLE|=={1}) active]">
                 <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
                 <div class="d-flex justify-content-center mt-3">
@@ -66,30 +67,7 @@
           </div>
         </div>
       </div>
-      <div id="mosaic" class="container">
-        <div class="d-flex flex-column align-items-center mt-5">
-          <div class="row w-100 mw-100 position-relative">
-            <BOUCLE_articles(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot?}{0,6}{par date}{inverse}{doublons}>
-              <div class="col col-lg-3 rectangle-3d fond-blanc m-2">
-                <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
-                <div class="position-absolute tag-link ml-3 mt-2">
-                  <BOUCLE_tag(MOTS){id_groupe=1}{id_article}>
-                    <a class="tag-bleu small mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
-                      <img class="mr-1" src="#CHEMIN{img/tag.svg}"/>#TITRE
-                    </a>
-                  </BOUCLE_tag>
-                </div>
-                <img class="img-prev-article" src="[(#LOGO_ARTICLE_SURVOL|extraire_attribut{src})]"/>
-                <div class="ml-2">
-                  <div class="txt-bleu-clair small mt-2">[(#DATE|affdate{'l d F Y'})]</div>
-                  <div class="mt-2 mb-2"><b>#TITRE</b></div>
-                </div>
-              </div>
-            </BOUCLE_articles>
-          </div>
-        </div>
-      </div>
-      <hr>
+      #INCLURE{fond=inclure/mosaic, env}
       #INCLURE{fond=inclure/rejoindre}
       #INCLURE{fond=inclure/infos}
       #INCLURE{fond=inclure/footer}

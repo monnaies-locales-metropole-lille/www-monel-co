@@ -1,0 +1,30 @@
+[(#SET{id_rubrique_actu, 3})]
+<div id="mosaic" class="container">
+  <div class="d-flex flex-column align-items-center mt-5">
+    <div class="row w-100 mw-100 position-relative">
+      <BOUCLE_mos_art(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot?}{0,6}{par date}{inverse}>
+        <div class="col-auto rectangle-3d fond-blanc px-0 m-2" style="width: 31.5%;">
+          <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
+          <div class="position-absolute tag-link ml-3 mt-2">
+            <BOUCLE_mos_tag(MOTS){id_groupe=1}{id_article}>
+              <a class="tag-bleu small mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
+                <img class="mr-1" src="#CHEMIN{img/tag.svg}"/>#TITRE
+              </a>
+            </BOUCLE_mos_tag>
+          </div>
+          <div style="aspect-ratio: 8 / 8;">
+            <img class="img-prev-article" src="[(#LOGO_ARTICLE_SURVOL|extraire_attribut{src})]"/>
+          </div>
+          <div class="ml-2">
+            <div class="txt-bleu-clair small mt-2">[(#DATE|affdate{'l d F Y'})]</div>
+            <div class="mt-2 mb-2"><b>#TITRE</b></div>
+          </div>
+        </div>
+        <div class="d-block d-sm-none w-100"></div>
+        [(#COMPTEUR_BOUCLE|=={3}|?{'
+        <div class="w-100"></div>
+        '})]
+      </BOUCLE_mos_art>
+    </div>
+  </div>
+</div>
