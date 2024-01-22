@@ -53,6 +53,8 @@ li.avantages {
 .rectangle-3d {
   box-shadow: 6px 6px 0px #7E9BB1;
   border-radius: 1.5625rem;
+  border: 0.5px solid;
+  border-color: #DDDDDD;
 }
 
 .fond-bleu {
@@ -204,7 +206,8 @@ input::placeholder {
 }
 
 .img-carrousel-container {
-  height: 70vh;
+  /* height: 70vh; */
+  height: 440px;
   width: 98%;
   overflow: hidden;
 }
@@ -229,7 +232,7 @@ input::placeholder {
   border: none;
   border-radius: 1.5625rem;
   color: #FFFFFF;
-  padding: 0px 5px;
+  padding: 0px 5px 3px 5px;
 }
 
 .tag-bleu-clair {
@@ -237,7 +240,7 @@ input::placeholder {
   border: none;
   border-radius: 1.5625rem;
   color: #FFFFFF !important;
-  padding: 0px 5px !important;
+  padding: 0px 5px 3px 5px;
 }
 
 .article-chapo {

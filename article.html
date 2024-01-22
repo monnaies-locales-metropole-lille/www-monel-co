@@ -19,13 +19,13 @@
             </div>
           </div>
         </div>
-        <BOUCLE_article(ARTICLES){statut=publie}{id_article}>
+        <BOUCLE_article(ARTICLES){statut=publie}{id_article}{doublons}>
           <div class="d-flex justify-content-center mt-3">
             <div class="img-carrousel-container">
               <img class="img-carrousel" src="[(#LOGO_ARTICLE_NORMAL|extraire_attribut{src})]"/>
             </div>
           </div>
-          <div class="mt-3 ml-3">
+          <div class="mt-3">
             <div>
               <!-- <span class="txt-bleu-clair mr-4">[(#DATE|affdate{'l d F Y'})]</span> -->
               <span class="txt-bleu-clair mr-4">[(#DATE|affdate)]</span>
@@ -49,8 +49,11 @@
             </div>
           </div>
         </BOUCLE_article>
+        <div class="txt-bleu-clair" style="margin-top: 4rem;">
+          LIRE AUSSI
+        </div>
       </div>
-      #INCLURE{fond=inclure/mosaic, env}
+      #INCLURE{fond=inclure/mosaic, env, doublons}
       #INCLURE{fond=inclure/rejoindre}
       #INCLURE{fond=inclure/infos}
       #INCLURE{fond=inclure/footer}

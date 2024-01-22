@@ -30,7 +30,7 @@
       <div id="carousel" class="container">
         <div id="carouselArticles" class="carousel slide [(#ENV{id_mot}|?{collapse,})]" data-ride="carousel">
           <div class="carousel-inner">
-            <BOUCLE_carrousel(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot=#GET{id_tag_carousel}}{par date}{inverse}>
+            <BOUCLE_carrousel(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot=#GET{id_tag_carousel}}{par date}{inverse}{doublons}>
               <div class="carousel-item [(#COMPTEUR_BOUCLE|=={1}) active]">
                 <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
                 <div class="d-flex justify-content-center mt-3">
@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      #INCLURE{fond=inclure/mosaic, env}
+      #INCLURE{fond=inclure/mosaic, env, doublons}
       #INCLURE{fond=inclure/rejoindre}
       #INCLURE{fond=inclure/infos}
       #INCLURE{fond=inclure/footer}
