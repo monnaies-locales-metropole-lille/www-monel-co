@@ -13,13 +13,13 @@
       <div id="titre" class="container">
         <div class="d-flex flex-column align-items-center">
           <div class="row w-100 mw-100 justify-content-center">
-            <div class="col d-flex align-items-center">
+            <div class="col d-flex align-items-center px-0">
               <img src="#CHEMIN{img/fleche.svg}">
               <span class="ml-3 large"><b>Actualités</b></span>
             </div>
-            <div class="col d-flex justify-content-end align-items-center">
+            <div class="col d-flex justify-content-end align-items-center px-0">
               <BOUCLE_title_tag(MOTS){id_mot}>
-                <a class="mr-3 tag-bleu-clair" href="#URL_PAGE{actu}">
+                <a class="tag-bleu-clair" href="#URL_PAGE{actu}">
                   <img class="mr-1" src="#CHEMIN{img/croix.svg}">#TITRE
                 </a>
               </BOUCLE_title_tag>
@@ -28,44 +28,49 @@
         </div>
       </div>
       <div id="carousel" class="container">
-        <div id="carouselArticles" class="carousel slide [(#ENV{id_mot}|?{collapse,})]" data-ride="carousel">
-          <div class="carousel-inner">
-            <BOUCLE_carrousel(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot=#GET{id_tag_carousel}}{par date}{inverse}{doublons}>
-              <div class="carousel-item [(#COMPTEUR_BOUCLE|=={1}) active]">
-                <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
-                <div class="d-flex justify-content-center mt-3">
-                  <div class="img-carrousel-container">
-                    <img class="img-carrousel" src="[(#LOGO_ARTICLE_NORMAL|extraire_attribut{src})]"/>
-                  </div>
-                </div>
-                <div class="mt-3 ml-3">
-                  <div class="d-flex">
-                    <!-- <span class="txt-bleu-clair mr-4">[(#DATE|affdate{'l d F Y'})]</span> -->
-                    <span class="txt-bleu-clair mr-4">[(#DATE|affdate)]</span>
-                    <div class="tag-link">
-                      <BOUCLE_tag_car(MOTS){id_groupe=1}{id_article}>
-                        <a class="small tag-bleu-clair mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
-                          <img class="mr-2" src="#CHEMIN{img/tag.svg}"/>#TITRE
-                        </a>
-                      </BOUCLE_tag_car>
+        <BOUCLE_test_car(CONDITION){si #ENV{id_mot}|non}>
+          <div id="carouselArticles" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <BOUCLE_carrousel(ARTICLES){statut=publie}{id_rubrique=#GET{id_rubrique_actu}}{id_mot=#GET{id_tag_carousel}}{par date}{inverse}{doublons}>
+                <div class="carousel-item [(#COMPTEUR_BOUCLE|=={1}) active]">
+                  <a href="#URL_ARTICLE"><span class="panel-link"></span></a>
+                  <div class="d-flex justify-content-center mt-3">
+                    <div class="img-article-container">
+                      <img class="img-article-carrousel" src="[(#LOGO_ARTICLE_NORMAL|extraire_attribut{src})]"/>
                     </div>
                   </div>
-                  <div class="">
-                    <span class="large"><b>#TITRE</b></span>
+                  <div class="mt-3">
+                    <div class="row no-gutters">
+                      <div>
+                        <span class="txt-bleu-clair mr-4">[(#DATE|affdate)]</span>
+                      </div>
+                      <div class="d-flex h-100 text-center" style="line-height: 100%;">
+                        <div class="tag-link">
+                          <BOUCLE_tag_car(MOTS){id_groupe=1}{id_article}>
+                            <a class="small tag-bleu-clair mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
+                              <img class="mr-2" src="#CHEMIN{img/tag.svg}"/>#TITRE
+                            </a>
+                          </BOUCLE_tag_car>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row no-gutters">
+                      <span class="large"><b>#TITRE</b></span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </BOUCLE_carrousel>
-            <a class="carousel-control-prev" href="#carouselArticles" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselArticles" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
+              </BOUCLE_carrousel>
+              <a class="carousel-control-prev" href="#carouselArticles" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselArticles" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
           </div>
-        </div>
+        </BOUCLE_test_car>
       </div>
       #INCLURE{fond=inclure/mosaic, env, doublons}
       #INCLURE{fond=inclure/rejoindre}

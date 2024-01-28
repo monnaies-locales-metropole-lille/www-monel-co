@@ -10,32 +10,31 @@
       #INCLURE{fond=inclure/nav}
       <hr/>
       <div id="article" class="container">
-        <div id="titre" class="d-flex flex-column align-items-center">
-          <div class="row w-100 mw-100 justify-content-center">
-            <div class="col d-flex align-items-center">
-              <a href="#URL_PAGE{actu}">
-                <img src="#CHEMIN{img/fleche-left.svg}">
-              </a>
-            </div>
-          </div>
+        <div id="titre" class="d-flex align-items-start">
+          <a href="#URL_PAGE{actu}">
+            <img src="#CHEMIN{img/fleche-left.svg}">
+          </a>
         </div>
         <BOUCLE_article(ARTICLES){statut=publie}{id_article}{doublons}>
-          <div class="d-flex justify-content-center mt-3">
-            <div class="img-carrousel-container">
-              <img class="img-carrousel" src="[(#LOGO_ARTICLE_NORMAL|extraire_attribut{src})]"/>
+          <div class="d-flex justify-content-center mt-4">
+            <div class="img-article-container">
+              <img class="img-article" src="[(#LOGO_ARTICLE_NORMAL|extraire_attribut{src})]"/>
             </div>
           </div>
           <div class="mt-3">
-            <div>
-              <!-- <span class="txt-bleu-clair mr-4">[(#DATE|affdate{'l d F Y'})]</span> -->
-              <span class="txt-bleu-clair mr-4">[(#DATE|affdate)]</span>
-              <BOUCLE_tag(MOTS){id_groupe=1}{id_article}>
-                <a class="small tag-bleu-clair mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
-                  <img class="mr-2" src="#CHEMIN{img/tag.svg}"/>#TITRE
-                </a>
-              </BOUCLE_tag>
+            <div class="row no-gutters">
+              <div>
+                <span class="txt-bleu-clair mr-4">[(#DATE|affdate)]</span>
+              </div>
+              <div class="h-100 text-center" style="line-height: 100%;">
+                <BOUCLE_tag(MOTS){id_groupe=1}{id_article}>
+                  <a class="small tag-bleu-clair mr-2" href="#URL_PAGE{actu}&id_mot=#ID_MOT">
+                    <img class="mr-2" src="#CHEMIN{img/tag.svg}"/>#TITRE
+                  </a>
+                </BOUCLE_tag>
+              </div>
             </div>
-            <div class="">
+            <div class="mt-2">
               <span class="large"><b>#TITRE</b></span>
             </div>
             <div class="normal article-chapo mt-3">
