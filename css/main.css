@@ -184,8 +184,16 @@ input::placeholder {
 }
 
 .form-input {
-  border-radius: 1.5625rem;
-  margin-bottom: 1rem;
+  border-radius: 1.5625rem !important;
+}
+
+.form-button {
+  margin-top: 1rem;
+}
+
+.formulaire_spip {
+  margin-bottom: 0;
+  padding: 0;
 }
 
 #scrollback-arrow {

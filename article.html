@@ -53,10 +53,11 @@
         </div>
       </div>
       #INCLURE{fond=inclure/mosaic, env, doublons}
-      #INCLURE{fond=inclure/rejoindre}
+      <INCLURE{fond=inclure/rejoindre, env, ajax}/>
       #INCLURE{fond=inclure/infos}
       #INCLURE{fond=inclure/footer}
     </div>
+    <img src="#CHEMIN{img/fleche-retour.svg}" onclick="topFunction()" id="scrollback-arrow"/>
     #INCLURE{fond=inclure/scripts}
   </body>
 </html>

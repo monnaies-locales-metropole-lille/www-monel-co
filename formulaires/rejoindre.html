@@ -1,0 +1,36 @@
+<div class="formulaire_spip formulaire_#FORM fond-bleu">
+  [
+  <p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>
+  ]
+  [
+  <p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>
+  ]
+  <form id="rejoindre-form" method="post" action="#ENV{action}">
+    #ACTION_FORMULAIRE{#ENV{action}}
+    <div class="editer-groupe text-center">
+      #SET{erreurs,#ENV**{erreurs}|table_valeur{nom}}
+      <div class="editer editer_nom obligatoire[ (#GET{erreurs}|oui)erreur]">
+        [<span class='erreur_message'>(#GET{erreurs})</span>]
+        <input type="text" name="nom" value="#ENV{nom}" class="text form-input" placeholder="Nom" />
+      </div>
+      <div class="editer editer_prenom">
+        <input type="text" name="prenom" value="#ENV{prenom}" class="form-input text" placeholder="Prénom" />
+      </div>
+      <div class="editer editer_societe">
+        <input type="text" name="societe" value="#ENV{societe}" class="form-input text" placeholder="Société" />
+      </div>
+      #SET{erreurs,#ENV**{erreurs}|table_valeur{email}}
+      <div class="editer editer_email obligatoire[ (#GET{erreurs}|oui)erreur]">
+        [<span class='erreur_message'>(#GET{erreurs})</span>]
+        <input type="email" name="email" value="#ENV{email}" class="form-input email" placeholder="Email" />
+      </div>
+      #SET{erreurs,#ENV**{erreurs}|table_valeur{message}}
+      <div class="editer editer_message obligatoire[ (#GET{erreurs}|oui)erreur]">
+        [<span class='erreur_message'>(#GET{erreurs})</span>]
+        <textarea name="message" value="#ENV{message}" class="form-input text" rows="5" placeholder="Message" ></textarea>
+      </div>
+      <input type="submit" class="bouton-blanc form-button" value="Envoyer" />
+    </div>
+    <div class="messages"></div>
+  </form>
+</div>
