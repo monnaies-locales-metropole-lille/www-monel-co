@@ -323,3 +323,12 @@ a.spip_out::after {
 .tag-link {
   z-index: 2;
 }
+
+.dropdown-menu {
+  font-size: 1.125rem;
+}
+
+.dropdown-item {
+  font-weight: 100;
+  line-height: 1;
+}
