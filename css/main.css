@@ -323,3 +323,11 @@ a.spip_out::after {
 .tag-link {
   z-index: 2;
 }
+
+#mlb2-6049321.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-horizontalRow input {
+  height: 100% !important;
+}
+
+#mlb2-6056776.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-horizontalRow input {
+  height: 100% !important;
+}
