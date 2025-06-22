@@ -39,8 +39,21 @@ li.avantages {
   margin-bottom: 1rem;
 }
 
+li.avantages_b {
+  margin: 2rem;
+}
+
 .logo-background {
   background-image: url('../img/pexels-guillaume-hankenne-2792025.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  background-position-x: center;
+  background-position-y: 28%;
+}
+
+.logo-background-bazaar {
+  background-image: url('../img/bazaar.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-origin: border-box;
@@ -52,6 +65,14 @@ li.avantages {
   padding: 25px;
   margin: 25px;
   border-radius: 1.5625rem;
+}
+
+.rectangle-blue-border {
+  padding: 25px;
+  margin: 25px;
+  border-radius: 1.5625rem;
+  border: 5px solid;
+  border-color: #7E92A9;
 }
 
 .rectangle-3d {
@@ -322,4 +343,8 @@ a.spip_out::after {
 
 .tag-link {
   z-index: 2;
+}
+
+.spip_documents_left {
+  margin-top: 0;
 }
