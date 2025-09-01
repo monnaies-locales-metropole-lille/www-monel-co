@@ -56,22 +56,6 @@
     ];
   };
 
-  # services.caddy = {
-  #   enable = true;
-  #   virtualHosts = {
-  #     "http://monel.spip.local:80" = {
-  #       extraConfig = ''
-  #         root * ./spip
-  #         php_fastcgi unix/${config.languages.php.fpm.pools.web.socket}{
-  #             trusted_proxies private_ranges
-  #         }
-  #         encode zstd gzip
-  #         header /*.js* Content-Type application/javascript
-  #       '';
-  #     };
-  #   };
-  # };
-
   services.nginx = {
     enable = true;
     httpConfig = ''
@@ -122,13 +106,13 @@
   };
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
-
-  enterShell = ''
-    php --version
-  '';
+  # scripts.hello.exec = ''
+  #   echo hello from $GREET
+  # '';
+  #
+  # enterShell = ''
+  #   php --version
+  # '';
 
   # https://devenv.sh/tasks/
   # tasks = {
@@ -137,11 +121,11 @@
   # };
 
   # https://devenv.sh/tests/
-  enterTest = ''
-    echo "Running tests"
-    # git --version | grep --color=auto "${pkgs.git.version}"
-    php --version
-  '';
+  # enterTest = ''
+  #   echo "Running tests"
+  #   # git --version | grep --color=auto "${pkgs.git.version}"
+  #   php --version
+  # '';
 
   # https://devenv.sh/git-hooks/
   # git-hooks.hooks.shellcheck.enable = true;
