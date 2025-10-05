@@ -53,12 +53,30 @@ li.avantages_b {
 }
 
 .logo-background-bazaar {
-  background-image: url('../img/bazaar.jpg');
+  background-image: url('../img/bazaar_2.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-origin: border-box;
   background-position-x: center;
   background-position-y: 28%;
+}
+
+.logo-container-bazaar {
+  background-color: rgba(48, 87, 128, 0.8);
+  border-radius: 15px;
+  width: 300px;
+  height: 430px;
+  padding: 40px;
+}
+
+.logo-container-bazaar h1 {
+  width: 100%;
+}
+
+.logo-container-bazaar img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .rectangle {
