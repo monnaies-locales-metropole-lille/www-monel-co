@@ -31,16 +31,13 @@ a:focus {
 }
 
 ul.avantages {
-  margin-left: 25px;
+  margin-left: 0;
   margin-right: 15px;
 }
 
 li.avantages {
-  margin-bottom: 1rem;
-}
-
-li.avantages_b {
-  margin: 2rem;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .logo-background {
