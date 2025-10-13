@@ -364,3 +364,8 @@ a.spip_out::after {
 .spip_documents_left {
   margin-top: 0;
 }
+
+.headline img.mr-2,
+.row img.mr-2 {
+  margin-right: 2rem !important;
+}
