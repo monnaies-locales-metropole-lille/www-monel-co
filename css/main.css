@@ -79,8 +79,9 @@ li.avantages {
 
 .rectangle {
   padding: 25px;
-  margin: 25px;
+  margin: 10px;
   border-radius: 1.5625rem;
+  min-height: 220px;
 }
 
 .rectangle-blue-border {
