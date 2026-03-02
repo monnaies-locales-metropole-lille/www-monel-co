@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <title>Monel - Annuaire des adhérents</title>
+    #INCLURE{fond=inclure/head}
+  </head>
+  <body>
+    <div class="container-fluid">
+      #INCLURE{fond=inclure/nav}
+      <hr/>
+      <div id="titre" class="container">
+        <div class="d-flex flex-column align-items-center py-4">
+          <div class="row no-gutters pb-3 align-items-center">
+            <div class="col">
+              <img src="#CHEMIN{img/ronds.svg}" class="d-none d-md-block float-right mr-2"/>
+            </div>
+            <div class="col">
+              <h2 class="headline text-center text-nowrap">
+                Annuaire <u class="deco-bleu">des adhérents</u>
+              </h2>
+            </div>
+            <div class="col"></div>
+          </div>
+          <div class="normal text-center">
+            Découvrez les entreprises et structures engagées avec Monel
+          </div>
+        </div>
+      </div>
+      #INCLURE{fond=inclure/annuaire-liste, env}
+      <INCLURE{fond=inclure/rejoindre, env, ajax}/>
+      #INCLURE{fond=inclure/infos}
+      #INCLURE{fond=inclure/footer}
+    </div>
+    <img src="#CHEMIN{img/fleche-retour.svg}" onclick="topFunction()" id="scrollback-arrow"/>
+    #INCLURE{fond=inclure/scripts}
+  </body>
+</html>

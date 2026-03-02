@@ -1,0 +1,94 @@
+[(#SET{page_num, [(#ENV{page_num}|?{[(#ENV{page_num}|moins{1})],0})]})]
+[(#SET{keywords, [(#ENV{keywords})]})]
+[(#REM) Fetch Cyclos data and store in GLOBALS ]
+[(#VAL{''}|cyclos_annuaire_data{#GET{page_num},#GET{keywords}}|oui)
+  <div class="container">
+    <div class="py-4">
+      [(#REM) Display error message if any ]
+      [(#VAL{#GLOBALS}|table_valeur{cyclos_data/error}|oui)
+        <div class="alert alert-warning text-center" role="alert">
+          [(#VAL{#GLOBALS}|table_valeur{cyclos_data/error})]
+        </div>
+      ]
+
+      [(#REM) Display total count ]
+      [(#SET{total, [(#VAL{#GLOBALS}|table_valeur{cyclos_data/total})]})]
+      [(#GET{total}|oui)
+        <div class="text-center mb-4 normal">
+          <b>[(#GET{total})] adhérent[(#GET{total}|>{1}|?{s,''})]</b>
+        </div>
+      ]
+
+      [(#REM) User cards grid ]
+      <div class="row justify-content-center">
+        <BOUCLE_users(DATA){source json, [(#VAL{#GLOBALS}|table_valeur{cyclos_data}|json_encode)]}{datapath users}>
+          <div class="col-12 col-md-4 mb-4">
+            <div class="rectangle-3d fond-blanc annuaire-card h-100 d-flex flex-column align-items-center p-4">
+              [(#VALEUR{image_url}|oui)
+                <img src="[(#VALEUR{image_url})]" alt="Logo [(#VALEUR{display})]" class="annuaire-logo mb-3"/>
+              ]
+              [(#VALEUR{image_url}|non)
+                <div class="annuaire-logo-placeholder mb-3">
+                  <img src="#CHEMIN{img/bonhomme.svg}" alt="Placeholder" style="width: 40px; height: 40px;"/>
+                </div>
+              ]
+              <div class="text-center">
+                <div class="large font-weight-bold mb-2">
+                  [(#VALEUR{display})]
+                </div>
+                [(#VALEUR{name}|oui)
+                  <div class="normal">
+                    [(#VALEUR{name})]
+                  </div>
+                ]
+                [(#VALEUR{username}|oui)
+                  <div class="small text-muted">
+                    @[(#VALEUR{username})]
+                  </div>
+                ]
+              </div>
+            </div>
+          </div>
+        </BOUCLE_users>
+      </div>
+
+      [(#REM) Empty state ]
+      <B_users>
+      </B_users>
+        <div class="text-center py-5 normal">
+          Aucun adhérent trouvé.
+        </div>
+      <//B_users>
+
+      [(#REM) Pagination ]
+      [(#SET{has_next, [(#VAL{#GLOBALS}|table_valeur{cyclos_data/has_next})]})]
+      [(#SET{current_page, [(#ENV{page_num}|?{#ENV{page_num},1})]})]
+
+      <div class="d-flex justify-content-center align-items-center py-4">
+        [(#GET{current_page}|>{1}|oui)
+          <a class="bouton-bleu mx-2" href="[(#SELF|parametre_url{page_num,[(#GET{current_page}|moins{1})]})]">
+            &larr; Précédent
+          </a>
+        ]
+        [(#GET{current_page}|>{1}|non)
+          <span class="bouton-bleu-clair mx-2" style="opacity: 0.5; cursor: not-allowed;">
+            &larr; Précédent
+          </span>
+        ]
+
+        <span class="mx-3 normal">Page [(#GET{current_page})]</span>
+
+        [(#GET{has_next}|oui)
+          <a class="bouton-bleu mx-2" href="[(#SELF|parametre_url{page_num,[(#GET{current_page}|plus{1})]})]">
+            Suivant &rarr;
+          </a>
+        ]
+        [(#GET{has_next}|non)
+          <span class="bouton-bleu-clair mx-2" style="opacity: 0.5; cursor: not-allowed;">
+            Suivant &rarr;
+          </span>
+        ]
+      </div>
+    </div>
+  </div>
+]

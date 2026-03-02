@@ -1,0 +1,25 @@
+<?php
+/**
+ * Cyclos API Configuration Template
+ *
+ * Copy this file to mes_options.php and fill in your actual credentials.
+ * mes_options.php is gitignored to prevent committing secrets.
+ */
+
+if (!defined('_ECRIRE_INC_VERSION')) {
+  return;
+}
+
+// Cyclos API base URL (without trailing slash)
+// Example: https://monel.cyclos.org/api
+define('_CYCLOS_API_URL', 'https://your-cyclos-instance.example.com/api');
+
+// Cyclos Access-Client-Token for authentication
+// Get this from your Cyclos admin panel under System > Access clients
+define('_CYCLOS_ACCESS_TOKEN', 'your-access-token-here');
+
+// Cache duration in seconds (default: 900 = 15 minutes)
+define('_CYCLOS_CACHE_DURATION', 900);
+
+// Number of users to fetch per page (default: 40)
+define('_CYCLOS_PAGE_SIZE', 40);

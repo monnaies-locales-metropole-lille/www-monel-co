@@ -396,3 +396,32 @@ a.spip_out::after {
 .row img.mr-2 {
   margin-right: 2rem !important;
 }
+
+/* Annuaire styles */
+.annuaire-card {
+  min-height: 280px;
+  transition: box-shadow 0.3s ease;
+}
+
+.annuaire-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.annuaire-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #A8D7DD;
+}
+
+.annuaire-logo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #A8D7DD;
+}
