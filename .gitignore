@@ -11,3 +11,6 @@ devenv.local.nix
 # local spip install
 spip
 tmp
+
+# local spip config
+mes_options.php
