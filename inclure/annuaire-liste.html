@@ -1,18 +1,18 @@
 [(#SET{page_num, [(#ENV{page_num}|?{[(#ENV{page_num}|moins{1})],0})]})]
 [(#SET{keywords, [(#ENV{keywords})]})]
-[(#REM) Fetch Cyclos data and store in GLOBALS ]
-[(#VAL{''}|cyclos_annuaire_data{#GET{page_num},#GET{keywords}}|oui)
+[(#REM) Fetch Cyclos data — the filter returns the result array ]
+[(#SET{cyclos, [(#VAL{''}|cyclos_annuaire_data{#GET{page_num},#GET{keywords}})]})]
   <div class="container">
     <div class="py-4">
       [(#REM) Display error message if any ]
-      [(#VAL{#GLOBALS}|table_valeur{cyclos_data/error}|oui)
+      [(#GET{cyclos}|table_valeur{error}|oui)
         <div class="alert alert-warning text-center" role="alert">
-          [(#VAL{#GLOBALS}|table_valeur{cyclos_data/error})]
+          [(#GET{cyclos}|table_valeur{error})]
         </div>
       ]
 
       [(#REM) Display total count ]
-      [(#SET{total, [(#VAL{#GLOBALS}|table_valeur{cyclos_data/total})]})]
+      [(#SET{total, [(#GET{cyclos}|table_valeur{total})]})]
       [(#GET{total}|oui)
         <div class="text-center mb-4 normal">
           <b>[(#GET{total})] adhérent[(#GET{total}|>{1}|?{s,''})]</b>
@@ -21,7 +21,7 @@
 
       [(#REM) User cards grid ]
       <div class="row justify-content-center">
-        <BOUCLE_users(DATA){source json, [(#VAL{#GLOBALS}|table_valeur{cyclos_data}|json_encode)]}{datapath users}>
+        <BOUCLE_users(DATA){source tableau, #GET{cyclos}}{datapath users}>
           <div class="col-12 col-md-4 mb-4">
             <div class="rectangle-3d fond-blanc annuaire-card h-100 d-flex flex-column align-items-center p-4">
               [(#VALEUR{image_url}|oui)
@@ -61,7 +61,7 @@
       <//B_users>
 
       [(#REM) Pagination ]
-      [(#SET{has_next, [(#VAL{#GLOBALS}|table_valeur{cyclos_data/has_next})]})]
+      [(#SET{has_next, [(#GET{cyclos}|table_valeur{has_next})]})]
       [(#SET{current_page, [(#ENV{page_num}|?{#ENV{page_num},1})]})]
 
       <div class="d-flex justify-content-center align-items-center py-4">
@@ -91,4 +91,3 @@
       </div>
     </div>
   </div>
-]
