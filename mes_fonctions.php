@@ -60,8 +60,14 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
     $pageSize = defined('_CYCLOS_PAGE_SIZE') ? _CYCLOS_PAGE_SIZE : 40;
   }
 
+  // Public member group (internal name) to restrict the directory to
+  $group = defined('_CYCLOS_USER_GROUP') ? _CYCLOS_USER_GROUP : '';
+
   // Build cache key
   $cache_key = 'cyclos_users_p' . $page . '_s' . $pageSize;
+  if (!empty($group)) {
+    $cache_key .= '_g' . $group;
+  }
   if (!empty($keywords)) {
     $cache_key .= '_k' . md5($keywords);
   }
@@ -92,6 +98,10 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
     'fields' => 'id,display,name,username,image,email,customValues'
   ];
 
+  if (!empty($group)) {
+    $params['groups'] = $group;
+  }
+
   if (!empty($keywords)) {
     $params['keywords'] = $keywords;
   }
@@ -109,7 +119,16 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
 
   $response = recuperer_url($url, $options);
 
-  if (!$response) {
+  // recuperer_url() returns ['status' => int, 'headers' => string, 'page' => string, ...]
+  $http_status = is_array($response) ? intval($response['status']) : 0;
+  $body    = is_array($response) ? $response['page'] : '';
+  $headers = is_array($response) ? $response['headers'] : '';
+  if (is_array($headers)) {
+    $headers = implode("\n", array_map(function ($k, $v) { return "$k: $v"; },
+      array_keys($headers), array_values($headers)));
+  }
+
+  if ($http_status < 200 || $http_status >= 300 || $body === '') {
     // API failed, try to use stale cache
     if (file_exists($cache_file)) {
       $cached_data = file_get_contents($cache_file);
@@ -124,18 +143,14 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
       'users' => [],
       'total' => 0,
       'has_next' => false,
-      'error' => 'Failed to fetch users from Cyclos API'
+      'error' => 'Failed to fetch users from Cyclos API (HTTP ' . $http_status . ')'
     ];
   }
 
-  // Parse response body and headers
-  // recuperer_url returns the body directly
-  $body = $response;
-
-  // Try to parse JSON
+  // Try to parse JSON body
   $data = json_decode($body, true);
 
-  if (!$data) {
+  if (!is_array($data)) {
     return [
       'users' => [],
       'total' => 0,
@@ -144,12 +159,7 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
     ];
   }
 
-  // Extract headers from the response
-  // Note: We need to get headers separately using recuperer_page
-  $page_data = recuperer_page($url, false, false, 0, $options);
-  $headers = isset($page_data['headers']) ? $page_data['headers'] : '';
-
-  // Parse X-Total-Count and X-Has-Next-Page headers
+  // Parse pagination from response headers (Cyclos: X-Total-Count / X-Has-Next-Page)
   $total = 0;
   $has_next = false;
 
@@ -191,20 +201,15 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
 /**
  * SPIP filter to fetch Cyclos annuaire data
  *
- * This filter stores the fetched data in $GLOBALS for template access
- * and returns a dummy value for the DATA loop
+ * Returns the result array so the template can capture it with #SET and read
+ * it via #GET{...}|table_valeur{...} (users / total / has_next / error).
  *
  * @param mixed $dummy Dummy input (ignored)
  * @param int $page Page number (0-indexed)
  * @param string|null $keywords Search keywords
- * @return string JSON-encoded array containing the data
+ * @return array ['users' => array, 'total' => int, 'has_next' => bool, 'error' => string|null]
  */
 function filtre_cyclos_annuaire_data_dist($dummy = '', $page = 0, $keywords = null) {
-  $result = cyclos_fetch_users($page, null, $keywords);
-
-  // Store in globals for template access
-  $GLOBALS['cyclos_data'] = $result;
-
-  // Return JSON for DATA loop
-  return json_encode($result);
+  // Return the result array directly so the template can capture it with #SET
+  return cyclos_fetch_users($page, null, $keywords);
 }

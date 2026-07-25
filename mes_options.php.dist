@@ -23,3 +23,7 @@ define('_CYCLOS_CACHE_DURATION', 900);
 
 // Number of users to fetch per page (default: 40)
 define('_CYCLOS_PAGE_SIZE', 40);
+
+// Cyclos group (internal name) to list in the public directory
+// (only members of this group appear in the annuaire)
+define('_CYCLOS_USER_GROUP', 'members');
