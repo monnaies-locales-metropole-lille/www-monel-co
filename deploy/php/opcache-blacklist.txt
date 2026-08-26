@@ -1,0 +1,9 @@
+# Paths opcache must never cache.
+#
+# opcache.validate_timestamps is 0 because the webroot is immutable for the life of
+# the container. SPIP's compiled skeletons are the exception: they live under
+# _DIR_TMP, they are generated at runtime, and they are expected to change. With
+# timestamp validation off, opcache would serve a stale compiled template forever.
+#
+# Excluding them costs a little CPU on cache misses and buys correctness.
+/var/spip/tmp/

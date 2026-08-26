@@ -1,0 +1,140 @@
+name: SPIP update watch
+
+# Nightly check of deploy/core.lock and deploy/plugins.lock against upstream.
+#
+# This is recommendation #7 of the incident report, and the one that would have
+# prevented INC-2026-08-21-001 outright: SPIP 4.4.20 was released on 17 August and
+# 4.4.21 on 20 August, both fixing pre-auth RCEs already under active exploitation.
+# The site was compromised on 21 August still running 4.4.16. Nobody was watching.
+#
+# The point of opening an issue rather than sending mail is that it is visible in
+# the place work already happens, and it cannot be silently filtered.
+
+on:
+  schedule:
+    # 06:00 UTC daily. GitHub may delay scheduled runs under load; that is fine
+    # for a daily watch, but do not tighten this expecting minute accuracy.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ISSUE_TITLE: 'SPIP or plugin updates available'
+  ISSUE_LABEL: 'spip-updates'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Run update check
+        id: check
+        run: |
+          set +e
+          out=$(./deploy/bin/check-updates.sh 2>&1)
+          code=$?
+          set -e
+
+          echo "$out"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          {
+            echo 'report<<CHECK_EOF'
+            echo "$out"
+            echo 'CHECK_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo '### Update check'
+            echo
+            echo '```'
+            echo "$out"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Ensure label exists
+        if: steps.check.outputs.exit_code != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "$ISSUE_LABEL" \
+            --description 'Pinned SPIP core or plugin is behind upstream' \
+            --color 'B60205' 2>/dev/null || true
+
+      - name: Open or update the tracking issue
+        if: steps.check.outputs.exit_code != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT: ${{ steps.check.outputs.report }}
+          CODE: ${{ steps.check.outputs.exit_code }}
+        run: |
+          set -euo pipefail
+
+          if [ "$CODE" = "2" ]; then
+            headline='**A pinned plugin has no stable release upstream.** This needs manual attention — the pinned version may have been withdrawn.'
+          else
+            headline='A newer SPIP core or plugin release is available.'
+          fi
+
+          body=$(cat <<EOF
+          $headline
+
+          \`\`\`
+          $REPORT
+          \`\`\`
+
+          ### What to do
+
+          \`\`\`sh
+          ./deploy/bin/check-updates.sh --rehash   # plugins: bump, re-download, re-hash
+          # core: edit SPIP_VERSION in deploy/core.lock after reading the release note
+          \`\`\`
+
+          Then review the lockfile diff, tag a release, and let the build workflow
+          push the image. Remember that a core upgrade is not complete until someone
+          loads \`/ecrire/\` and the database migration runs.
+
+          Read the release notes first — <https://blog.spip.net/>. If an advisory
+          mentions active exploitation, treat it as same-day.
+
+          ---
+          <sub>Opened automatically by \`.github/workflows/check-updates.yml\`. This issue is
+          updated in place while the condition persists, and closed automatically once the
+          locks are current.</sub>
+          EOF
+          )
+
+          existing=$(gh issue list --state open --label "$ISSUE_LABEL" \
+            --json number --jq '.[0].number // empty' 2>/dev/null || true)
+
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --body "$body"
+            echo "Updated issue #$existing"
+          else
+            gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" --body "$body"
+            echo "Opened a new issue"
+          fi
+
+      - name: Close the tracking issue when everything is current
+        if: steps.check.outputs.exit_code == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          existing=$(gh issue list --state open --label "$ISSUE_LABEL" \
+            --json number --jq '.[0].number // empty' 2>/dev/null || true)
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" \
+              --comment 'Core and all pinned plugins are current again. Closing automatically.'
+            echo "Closed issue #$existing"
+          else
+            echo "Nothing to close."
+          fi

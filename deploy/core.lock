@@ -1,0 +1,14 @@
+# SPIP core pin — www.monel.co
+#
+# 4.4.21 is the minimum safe release: it fixes CVE-2026-77647 (4.4.20) *and*
+# CVE-2026-77806 (4.4.21). 4.4.20 alone is NOT sufficient — see
+# incidents/2026-08-21-spip-rce-webshell.md §3.1a.
+#
+# Never lower this. Bump it via ./bin/check-updates.sh + a rebuild.
+#
+# Installed with: composer create-project spip/spip:<version>
+# The package ships root files (index.php, spip.php), ecrire/, prive/,
+# squelettes-dist/, plugins-dist/ and vendor/ — including vendor/spip/security
+# (ecran_securite). Contrib plugins are pinned separately in plugins.lock.
+
+SPIP_VERSION=4.4.21

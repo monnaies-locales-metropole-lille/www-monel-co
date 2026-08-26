@@ -1,0 +1,145 @@
+# www.monel.co — production compose
+#
+#   docker compose -f deploy/compose.yaml up -d
+#
+# Deliberate properties of this file:
+#   * both containers are read_only, non-root, and drop every capability
+#   * only nginx is published, and only to localhost — put a TLS proxy in front
+#   * php-fpm's port 9000 is reachable only from nginx's fixed address
+#   * the database is NOT here: it is a managed service on its own host
+#   * no volume grants access to anything outside this site
+#
+# What this file does not do, and cannot: isolate the site from Cyclos. That is a
+# host-level decision. Run this on a machine that has no Cyclos data on it — see
+# README §What this does not fix.
+
+name: monel-spip
+
+services:
+  php:
+    image: ${MONEL_IMAGE:?set MONEL_IMAGE, e.g. monel-spip:4.4.21-1}
+    restart: unless-stopped
+
+    # The image is already root-owned and mode 0555 throughout; this makes the
+    # whole filesystem immutable regardless, so `docker diff` on a running
+    # container is a genuine integrity check.
+    read_only: true
+
+    user: "65532:65532"
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+    tmpfs:
+      # php-fpm needs a scratch area; noexec means nothing dropped here can run.
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
+
+    volumes:
+      - spip_img:/var/www/spip/IMG
+      - spip_local:/var/www/spip/local
+      - spip_tmp:/var/spip/tmp
+      # connect.php and cles.php. Read-only, outside the webroot, never in the image.
+      - ./secrets:/var/spip/secrets:ro
+
+    environment:
+      MONEL_BAZAAR_VIDEO_ID: ${MONEL_BAZAAR_VIDEO_ID:-50}
+      # Cyclos: unset in production. The integration is on the `cyclos-api`
+      # branch and not deployed, so these are optional by design — mes_options.php
+      # skips the whole block when they are absent. Do not make them required.
+      CYCLOS_API_URL: ${CYCLOS_API_URL:-}
+      CYCLOS_ACCESS_TOKEN: ${CYCLOS_ACCESS_TOKEN:-}
+      CYCLOS_CACHE_DURATION: ${CYCLOS_CACHE_DURATION:-900}
+      CYCLOS_PAGE_SIZE: ${CYCLOS_PAGE_SIZE:-40}
+      CYCLOS_USER_GROUP: ${CYCLOS_USER_GROUP:-members}
+
+    networks:
+      internal:
+        ipv4_address: 172.28.0.20
+
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      php:
+        condition: service_started
+      # Must not start serving from a half-copied webroot.
+      webroot-sync:
+        condition: service_completed_successfully
+
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+    tmpfs:
+      - /var/cache/nginx:rw,noexec,nosuid,nodev,size=64m
+      - /var/run:rw,noexec,nosuid,nodev,size=8m
+
+    volumes:
+      # Mounted as a directory, not as individual files, so it *replaces* conf.d
+      # rather than adding to it. The stock nginx image ships a default.conf that
+      # serves on port 80; mounting file-by-file would leave it in place.
+      - ./nginx:/etc/nginx/conf.d:ro
+      # nginx serves IMG/ and local/ directly, and needs the webroot for try_files.
+      # Read-only even for the two writable volumes: nginx never writes, only PHP does.
+      - spip_webroot:/var/www/spip:ro
+      - spip_img:/var/www/spip/IMG:ro
+      - spip_local:/var/www/spip/local:ro
+
+    # Bind to localhost only. TLS terminates in a proxy in front of this.
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    networks:
+      internal:
+        ipv4_address: 172.28.0.10
+
+    logging: *logging
+
+  # ---------------------------------------------------------------------------
+  # One-shot: populate the shared webroot volume from the image.
+  # ---------------------------------------------------------------------------
+  # nginx needs the static files (css, js, img, squelettes assets) that live in the
+  # image, but the two containers cannot share an image layer directly. This copies
+  # the webroot into a volume on every `up`, so a new image tag propagates to nginx
+  # without a manual step. It runs to completion and exits.
+  webroot-sync:
+    image: ${MONEL_IMAGE:?}
+    user: "0:0"
+    restart: "no"
+    command: >
+      sh -c 'rm -rf /sync/* /sync/.[!.]* 2>/dev/null;
+             cp -a /var/www/spip/. /sync/ &&
+             rm -rf /sync/IMG/* /sync/local/* &&
+             echo webroot synced'
+    volumes:
+      - spip_webroot:/sync
+    networks: [internal]
+
+networks:
+  internal:
+    driver: bridge
+    # Fixed subnet so php-fpm's listen.allowed_clients can name nginx exactly.
+    # Keep in step with deploy/php/www.conf.
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+    # Egress is NOT restricted here, and cannot usefully be: a bridge network is
+    # all-or-nothing. Setting enable_ip_masquerade=false would cut outbound traffic
+    # entirely — including SMTP for facteur — so it is the wrong tool. The
+    # 2026-08-21 second stage arrived over `wget`, so this still matters: implement
+    # the allowlist at the host firewall against this fixed subnet.
+    # Recipe in README §Egress.
+
+volumes:
+  spip_img:
+  spip_local:
+  spip_tmp:
+  spip_webroot:

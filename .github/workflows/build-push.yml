@@ -1,0 +1,162 @@
+name: Build and push image
+
+# Builds the immutable SPIP image and pushes it to GHCR on a release tag.
+#
+# GHCR is used deliberately: it authenticates with the built-in GITHUB_TOKEN, so
+# there are no long-lived registry credentials to store, leak or rotate. The
+# Docker Hub credentials for `mlmel` are committed to this org's ansible
+# repository and are treated as compromised — see the incident report, §5.9 item 6.
+#
+# Tags produced for `v3.8` with core.lock at 4.4.21:
+#   ghcr.io/<owner>/monel-spip:3.8
+#   ghcr.io/<owner>/monel-spip:3.8-spip4.4.21
+#   ghcr.io/<owner>/monel-spip:latest
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Tag to build (e.g. v3.8)'
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/monel-spip
+  # Floor set by the incident: 4.4.20 fixes CVE-2026-77647 only, and the publisher
+  # released 4.4.21 because 4.4.20 remained exploitable. Never lower this.
+  MIN_SPIP_VERSION: 4.4.21
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Derive versions
+        id: vers
+        run: |
+          set -euo pipefail
+
+          raw="${{ inputs.ref || github.ref_name }}"
+          case "$raw" in
+            v[0-9]*) site="${raw#v}" ;;
+            *)
+              echo "::error::Tag '$raw' does not look like a release tag (expected vX.Y[.Z])"
+              exit 1
+              ;;
+          esac
+
+          spip=$(grep -E '^SPIP_VERSION=' deploy/core.lock | cut -d= -f2)
+          if [ -z "$spip" ]; then
+            echo "::error::Could not read SPIP_VERSION from deploy/core.lock"
+            exit 1
+          fi
+
+          plugins_sha=$(sha256sum deploy/plugins.lock | cut -d' ' -f1)
+
+          {
+            echo "site=$site"
+            echo "spip=$spip"
+            echo "plugins_sha=$plugins_sha"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "site version : $site"
+          echo "spip version : $spip"
+          echo "plugins.lock : $plugins_sha"
+
+      # Encodes core.lock's "never lower this" as an actual gate. A rebuild that
+      # would ship a version below the fix for both CVEs fails here rather than
+      # reaching a registry.
+      - name: Refuse to build a vulnerable SPIP
+        run: |
+          set -euo pipefail
+          spip='${{ steps.vers.outputs.spip }}'
+          min='${{ env.MIN_SPIP_VERSION }}'
+          lowest=$(printf '%s\n%s\n' "$spip" "$min" | sort -V | head -1)
+          if [ "$spip" != "$min" ] && [ "$lowest" != "$min" ]; then
+            echo "::error::deploy/core.lock pins SPIP $spip, below the $min floor set after INC-2026-08-21-001."
+            exit 1
+          fi
+          echo "SPIP $spip meets the $min floor."
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          # Production runs x86_64. Add linux/arm64 here if that changes —
+          # it roughly doubles build time because the PHP extensions compile.
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vers.outputs.site }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vers.outputs.site }}-spip${{ steps.vers.outputs.spip }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          labels: |
+            org.opencontainers.image.title=monel-spip
+            org.opencontainers.image.description=Immutable SPIP image for www.monel.co
+            org.opencontainers.image.version=${{ steps.vers.outputs.site }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.licenses=GPL-3.0-only
+            co.monel.spip.version=${{ steps.vers.outputs.spip }}
+            co.monel.plugins.lock.sha256=${{ steps.vers.outputs.plugins_sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+
+      # Signed, verifiable statement of what produced this image. Given that the
+      # last incident turned on nobody being able to tell what was deployed, being
+      # able to answer that cryptographically is worth the one extra step.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+      - name: Summary
+        run: |
+          {
+            echo "### Image pushed"
+            echo
+            echo '| | |'
+            echo '|---|---|'
+            echo "| Site version | \`${{ steps.vers.outputs.site }}\` |"
+            echo "| SPIP version | \`${{ steps.vers.outputs.spip }}\` |"
+            echo "| Digest | \`${{ steps.build.outputs.digest }}\` |"
+            echo "| plugins.lock | \`${{ steps.vers.outputs.plugins_sha }}\` |"
+            echo
+            echo '```sh'
+            echo "export MONEL_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vers.outputs.site }}"
+            echo 'docker compose -f deploy/compose.yaml up -d'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

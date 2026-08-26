@@ -1,0 +1,43 @@
+# Build context is the repository root; only the skeleton belongs in the image.
+#
+# This lives at the repository root rather than beside deploy/Dockerfile because
+# Docker reads .dockerignore from the *context root*. Keeping it here means both
+# local builds and CI work with no setup step.
+#
+# Build with: docker build -f deploy/Dockerfile -t monel-spip:<tag> .
+
+# The local SPIP install — the image builds its own pinned copy.
+spip/
+tmp/
+
+# NOTE: deploy/ is deliberately NOT excluded — the Dockerfile COPYs core.lock,
+# plugins.lock and the php/nginx config out of it. It is removed from the
+# squelettes tree inside the build instead.
+
+# Incident material. compromised-backup/ contains live webshells: it must never
+# enter a build context, let alone an image layer.
+incidents/
+compromised-backup/
+compromised-backup.tgz
+
+# Local development
+.devenv*
+.direnv/
+devenv.nix
+devenv.lock
+devenv.yaml
+devenv.local.nix
+.pre-commit-config.yaml
+mes_options.php
+
+# VCS and editor noise
+.git/
+.gitignore
+.github/
+*.swp
+.DS_Store
+
+# Docs — not site content, and should not be web-served
+CLAUDE.md
+AGENTS.md
+README.md
