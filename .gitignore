@@ -13,4 +13,13 @@ spip
 tmp
 
 # local spip config
+# No slash, so this matches at every level — including deploy/config/. That copy
+# is a build input and must be committed, hence the negation below. It holds no
+# secrets: everything sensitive is read from the environment at runtime.
 mes_options.php
+!deploy/config/mes_options.php
+
+# Deployment secrets: connect.php (database credentials) and cles.php (SPIP's
+# encryption keys). Mounted read-only at runtime, never baked into the image and
+# never committed.
+deploy/secrets/
