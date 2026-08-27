@@ -34,14 +34,33 @@ function monel_env(string $name, ?string $default = null): string {
 // Writable paths
 // ---------------------------------------------------------------------------
 
-// tmp/ lives outside the webroot. Compiled skeletons are the directory the
-// 2026-08-21 payload executed from; keeping it off the document root means it
-// cannot be requested over HTTP under any misconfiguration.
-define('_DIR_TMP', '/var/spip/tmp/');
-
-// connect.php and cles.php are mounted read-only as secrets, also outside the webroot.
+// connect.php and cles.php are mounted read-only as secrets, outside the webroot.
+// These must be defined BEFORE spip_initialisation_core() below, which only fills
+// in constants that are not already set.
 define('_DIR_CONNECT', '/var/spip/secrets/');
 define('_DIR_ETC', '/var/spip/secrets/');
+
+// Relocate tmp/ outside the webroot. Compiled skeletons are the directory the
+// 2026-08-21 payload executed from; keeping them off the document root means they
+// cannot be requested over HTTP under any misconfiguration.
+//
+// This MUST be done by calling spip_initialisation_core(), not by defining
+// _DIR_TMP. SPIP derives _DIR_CACHE, _DIR_SKELS, _DIR_SESSIONS, _DIR_DUMP and
+// _DIR_TRANSFERT from this function's *argument*, not from _DIR_TMP — so setting
+// the constant alone relocates nothing and SPIP still writes to ./tmp/. That
+// failure is invisible in development, where the webroot is writable and it just
+// works; on a read-only webroot it surfaces as a fatal on the first request.
+//
+// SPIP supports this: inc/utils.php documents the function as "appellée dans
+// inc_version ou mes_options", and inc_version.php loads inc/utils.php (line 484)
+// before including this file (line 489). When inc_version calls it again
+// afterwards, every constant is already set and the call is a no-op.
+spip_initialisation_core(
+	_DIR_RACINE . 'config/',   // $pi  permanent, not web-served
+	_DIR_RACINE . 'IMG/',      // $pa  uploaded documents (volume)
+	'/var/spip/tmp/',          // $ti  cache, skeletons, sessions (volume)
+	_DIR_RACINE . 'local/'     // $ta  generated css and images (volume)
+);
 
 // ---------------------------------------------------------------------------
 // File permissions

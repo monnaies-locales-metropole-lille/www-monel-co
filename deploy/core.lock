@@ -4,11 +4,26 @@
 # CVE-2026-77806 (4.4.21). 4.4.20 alone is NOT sufficient — see
 # incidents/2026-08-21-spip-rce-webshell.md §3.1a.
 #
-# Never lower this. Bump it via ./bin/check-updates.sh + a rebuild.
+# Never lower this. The build workflow refuses to run below 4.4.21.
+# Bump it via ./bin/check-updates.sh --rehash, which recomputes the checksum.
 #
-# Installed with: composer create-project spip/spip:<version>
-# The package ships root files (index.php, spip.php), ecrire/, prive/,
-# squelettes-dist/, plugins-dist/ and vendor/ — including vendor/spip/security
-# (ecran_securite). Contrib plugins are pinned separately in plugins.lock.
+# WHY THE ZIP AND NOT COMPOSER
+#
+# `composer create-project spip/spip` does NOT install plugins-dist. That package
+# requires only spip/ecrire, spip/dist, spip/prive and spip/security; the twenty
+# bundled plugins are described by plugins-dist.json — a manifest of git repos and
+# tags — and are expected to be cloned by SPIP's own dev tooling.
+#
+# The result is an installation that boots and renders a simple page, but has no
+# medias, mediabox, porte_plume, safehtml, textwheel, svp, forum or urls_etendues.
+# It fails in ways that look unrelated to the cause: with urls_etendues absent, any
+# article URL raises "Missing a url function for type propres".
+#
+# The official zip is the composition upstream actually ships and tests, in one
+# artifact with one checksum. It also removes composer from the build, so there is
+# no transitive-dependency resolution to pin separately.
 
 SPIP_VERSION=4.4.21
+SPIP_URL=https://files.spip.net/spip/archives/spip-v4.4.21.zip
+SPIP_SHA256=0a8f770923c38e72d95c3db62673a946f090a557dbece5b5bbb6a1baa214cd21
+SPIP_SIZE=9773732

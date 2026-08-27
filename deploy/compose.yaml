@@ -1,24 +1,37 @@
 # www.monel.co — production compose
 #
-#   docker compose -f deploy/compose.yaml up -d
+#   MONEL_IMAGE=ghcr.io/monnaies-locales-metropole-lille/monel-spip:3.8 \
+#     docker compose -f deploy/compose.yaml up -d
 #
-# Deliberate properties of this file:
-#   * both containers are read_only, non-root, and drop every capability
-#   * only nginx is published, and only to localhost — put a TLS proxy in front
-#   * php-fpm's port 9000 is reachable only from nginx's fixed address
-#   * the database is NOT here: it is a managed service on its own host
+# Two containers, and no host footprint beyond the front proxy and a dump cron:
+#   web  Apache + mod_php serving SPIP
+#   db   MariaDB, reachable only from web
+#
+# Deliberate properties:
+#   * both read_only, non-root, every capability dropped
+#   * only web is published, and only to localhost — the host's Apache terminates
+#     TLS and reverse-proxies here
+#   * db sits on an `internal: true` network: it has no route off the host and no
+#     published port, so nothing outside this stack can reach it. That is the §5.1
+#     lesson applied in the direction the incident report did not cover.
 #   * no volume grants access to anything outside this site
 #
-# What this file does not do, and cannot: isolate the site from Cyclos. That is a
-# host-level decision. Run this on a machine that has no Cyclos data on it — see
-# README §What this does not fix.
+# The point of making the site self-contained is report recommendation #9 —
+# separating it from Cyclos. With the database in here, moving this site to its own
+# VM is a copy of this file plus two volumes, not a rebuild.
+#
+# What this file cannot do is perform that separation for you. Run it on a machine
+# that has no Cyclos data on it — see README §What this does not fix.
 
 name: monel-spip
 
 services:
-  php:
-    image: ${MONEL_IMAGE:?set MONEL_IMAGE, e.g. monel-spip:4.4.21-1}
+  web:
+    image: ${MONEL_IMAGE:?set MONEL_IMAGE, e.g. ghcr.io/.../monel-spip:3.8}
     restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
 
     # The image is already root-owned and mode 0555 throughout; this makes the
     # whole filesystem immutable regardless, so `docker diff` on a running
@@ -31,7 +44,9 @@ services:
       - no-new-privileges:true
 
     tmpfs:
-      # php-fpm needs a scratch area; noexec means nothing dropped here can run.
+      # Apache's runtime state. noexec means nothing written here can run.
+      - /var/run/apache2:rw,noexec,nosuid,nodev,size=8m
+      - /var/lock/apache2:rw,noexec,nosuid,nodev,size=8m
       - /tmp:rw,noexec,nosuid,nodev,size=64m
 
     volumes:
@@ -46,15 +61,22 @@ services:
       # Cyclos: unset in production. The integration is on the `cyclos-api`
       # branch and not deployed, so these are optional by design — mes_options.php
       # skips the whole block when they are absent. Do not make them required.
+      #
+      # Note: with mod_php, getenv() sees the entire container environment — there
+      # is no php-fpm env allowlist to hide behind. Keep this list minimal and put
+      # nothing here that PHP should not be able to read. The database credentials
+      # are deliberately not here; they live in the mounted connect.php.
       CYCLOS_API_URL: ${CYCLOS_API_URL:-}
       CYCLOS_ACCESS_TOKEN: ${CYCLOS_ACCESS_TOKEN:-}
       CYCLOS_CACHE_DURATION: ${CYCLOS_CACHE_DURATION:-900}
       CYCLOS_PAGE_SIZE: ${CYCLOS_PAGE_SIZE:-40}
       CYCLOS_USER_GROUP: ${CYCLOS_USER_GROUP:-members}
 
-    networks:
-      internal:
-        ipv4_address: 172.28.0.20
+    # Bind to localhost only. TLS terminates in the host's Apache in front of this.
+    ports:
+      - "127.0.0.1:${MONEL_PORT:-8090}:8080"
+
+    networks: [edge, internal]
 
     logging: &logging
       driver: json-file
@@ -62,84 +84,60 @@ services:
         max-size: "50m"
         max-file: "10"
 
-  nginx:
-    image: nginx:1.27-alpine
+  db:
+    image: mariadb:11.4
     restart: unless-stopped
-    depends_on:
-      php:
-        condition: service_started
-      # Must not start serving from a half-copied webroot.
-      webroot-sync:
-        condition: service_completed_successfully
 
     read_only: true
+
     cap_drop: [ALL]
+    # MariaDB's entrypoint starts as root to fix datadir ownership, then drops to
+    # the mysql user. It needs exactly these to do that and nothing more.
+    cap_add: [CHOWN, SETGID, SETUID, DAC_OVERRIDE]
     security_opt:
       - no-new-privileges:true
 
     tmpfs:
-      - /var/cache/nginx:rw,noexec,nosuid,nodev,size=64m
-      - /var/run:rw,noexec,nosuid,nodev,size=8m
+      - /run/mysqld:rw,nosuid,nodev,size=16m
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
 
     volumes:
-      # Mounted as a directory, not as individual files, so it *replaces* conf.d
-      # rather than adding to it. The stock nginx image ships a default.conf that
-      # serves on port 80; mounting file-by-file would leave it in place.
-      - ./nginx:/etc/nginx/conf.d:ro
-      # nginx serves IMG/ and local/ directly, and needs the webroot for try_files.
-      # Read-only even for the two writable volumes: nginx never writes, only PHP does.
-      - spip_webroot:/var/www/spip:ro
-      - spip_img:/var/www/spip/IMG:ro
-      - spip_local:/var/www/spip/local:ro
+      - db_data:/var/lib/mysql
 
-    # Bind to localhost only. TLS terminates in a proxy in front of this.
-    ports:
-      - "127.0.0.1:8080:8080"
+    environment:
+      # The root account gets a random password nobody ever needs: the application
+      # user below is created by the entrypoint, and backups run as that user
+      # (it holds ALL on its own schema, which covers SELECT and LOCK TABLES).
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+      MARIADB_DATABASE: ${MONEL_DB_NAME:-monel}
+      MARIADB_USER: ${MONEL_DB_USER:-monel}
+      MARIADB_PASSWORD: ${MONEL_DB_PASSWORD:?set MONEL_DB_PASSWORD — rotated, not the pre-incident value}
+      MARIADB_AUTO_UPGRADE: "1"
 
-    networks:
-      internal:
-        ipv4_address: 172.28.0.10
+    # No `ports:`. Ever. The only route to this database is the internal network.
+
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+    networks: [internal]
 
     logging: *logging
 
-  # ---------------------------------------------------------------------------
-  # One-shot: populate the shared webroot volume from the image.
-  # ---------------------------------------------------------------------------
-  # nginx needs the static files (css, js, img, squelettes assets) that live in the
-  # image, but the two containers cannot share an image layer directly. This copies
-  # the webroot into a volume on every `up`, so a new image tag propagates to nginx
-  # without a manual step. It runs to completion and exits.
-  webroot-sync:
-    image: ${MONEL_IMAGE:?}
-    user: "0:0"
-    restart: "no"
-    command: >
-      sh -c 'rm -rf /sync/* /sync/.[!.]* 2>/dev/null;
-             cp -a /var/www/spip/. /sync/ &&
-             rm -rf /sync/IMG/* /sync/local/* &&
-             echo webroot synced'
-    volumes:
-      - spip_webroot:/sync
-    networks: [internal]
-
 networks:
-  internal:
-    driver: bridge
-    # Fixed subnet so php-fpm's listen.allowed_clients can name nginx exactly.
-    # Keep in step with deploy/php/www.conf.
-    ipam:
-      config:
-        - subnet: 172.28.0.0/24
+  # web only. Carries outbound traffic (SMTP) and the published port.
+  edge:
 
-    # Egress is NOT restricted here, and cannot usefully be: a bridge network is
-    # all-or-nothing. Setting enable_ip_masquerade=false would cut outbound traffic
-    # entirely — including SMTP for facteur — so it is the wrong tool. The
-    # 2026-08-21 second stage arrived over `wget`, so this still matters: implement
-    # the allowlist at the host firewall against this fixed subnet.
-    # Recipe in README §Egress.
+  # web + db. `internal: true` means Docker installs no gateway, so nothing on
+  # this network can reach — or be reached from — anything off the host.
+  internal:
+    internal: true
 
 volumes:
   spip_img:
   spip_local:
   spip_tmp:
-  spip_webroot:
+  db_data:

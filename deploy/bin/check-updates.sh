@@ -35,10 +35,36 @@ print(max(vs, key=lambda v: tuple(int(n) for n in v.split("."))))
 ')
 core_pinned=$(grep -E '^SPIP_VERSION=' "$HERE/core.lock" | cut -d= -f2)
 if [ "$core_pinned" != "$core_latest" ]; then
-	echo "  CORE UPDATE: spip/spip $core_pinned -> $core_latest"
+	echo "  CORE UPDATE: SPIP $core_pinned -> $core_latest"
 	echo "               https://blog.spip.net/ — read the release note before bumping."
+
+	# core.lock pins the official zip by checksum, so a version bump needs new
+	# URL/SHA/SIZE values, not just a new version string. Compute them here so
+	# nobody has to work out the incantation under time pressure after an advisory.
+	new_url="https://files.spip.net/spip/archives/spip-v${core_latest}.zip"
+	if curl -fsSL -o "$WORK/spip.zip" "$new_url"; then
+		new_size=$(wc -c < "$WORK/spip.zip" | tr -d ' ')
+		new_sha=$(shasum -a 256 "$WORK/spip.zip" | cut -d' ' -f1)
+		if [ "$REHASH" = "1" ]; then
+			sed -i.bak \
+				-e "s|^SPIP_VERSION=.*|SPIP_VERSION=${core_latest}|" \
+				-e "s|^SPIP_URL=.*|SPIP_URL=${new_url}|" \
+				-e "s|^SPIP_SHA256=.*|SPIP_SHA256=${new_sha}|" \
+				-e "s|^SPIP_SIZE=.*|SPIP_SIZE=${new_size}|" \
+				"$HERE/core.lock"
+			rm -f "$HERE/core.lock.bak"
+			echo "               core.lock updated to ${core_latest}."
+		else
+			echo "               to apply, run with --rehash, or set by hand:"
+			echo "                 SPIP_URL=${new_url}"
+			echo "                 SPIP_SHA256=${new_sha}"
+			echo "                 SPIP_SIZE=${new_size}"
+		fi
+	else
+		echo "               WARNING: could not fetch ${new_url} to compute a checksum."
+	fi
 else
-	echo "  core up to date: spip/spip $core_pinned"
+	echo "  core up to date: SPIP $core_pinned"
 fi
 
 echo "==> Checking plugins..."

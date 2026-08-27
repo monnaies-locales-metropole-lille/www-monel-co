@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Template for deploy/secrets/connect.php.
+ *
+ * It lives in config/ rather than secrets/ because it holds no secret and must be
+ * committed — deploy/secrets/ is gitignored, so an example placed there would be
+ * silently dropped from the repository.
+ *
+ * Copy it to deploy/secrets/connect.php and fill in the password.
+ *
+ * This file is mounted read-only at /var/spip/secrets/ (see _DIR_CONNECT in
+ * config/mes_options.php), outside the webroot. It is never baked into the image.
+ *
+ * Note the host: `db` is the compose service name, resolved on the internal
+ * network. Before the database moved into the stack this read 'localhost' and
+ * used a mounted unix socket; if you see that form somewhere, it is stale.
+ *
+ * The password must match MONEL_DB_PASSWORD in the environment compose reads, and
+ * must NOT be the pre-incident value — the old one is in a dump an attacker had
+ * read access to (report §4.3).
+ */
+
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
+}
+
+defined('_MYSQL_SET_SQL_MODE') || define('_MYSQL_SET_SQL_MODE', true);
+
+$GLOBALS['spip_connect_version'] = 0.8;
+
+spip_connect_db(
+	'db',            // host — the compose service name
+	'3306',          // port
+	'monel',         // user  — MONEL_DB_USER
+	'CHANGE_ME',     // pass  — MONEL_DB_PASSWORD
+	'monel',         // base  — MONEL_DB_NAME
+	'mysql',
+	'spip',
+	'',
+	''
+);

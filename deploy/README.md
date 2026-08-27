@@ -6,12 +6,12 @@ Everything SPIP executes lives in a versioned, read-only image. Upgrading is a
 rebuild; rolling back is the previous tag. The three directories SPIP genuinely
 needs to write are volumes, and none of them can execute PHP.
 
-**Status.** The image builds, and the hardening has been verified empirically: SPIP
-4.4.21 and all ten pinned plugins present, non-root, nothing in the webroot writable
-outside the two volumes, every nginx denial confirmed against webshell-shaped files,
-and runtime settings proven to propagate through FastCGI. **Not yet tested:** anything
-requiring the database — SPIP actually rendering a page, and the core upgrade migration.
-Those belong to the rebuild. See [Before first deploy](#before-first-deploy).
+**Status.** Verified end to end against the preserved production database: the real
+site renders (homepage, articles, forms), compiled skeletons land outside the webroot,
+nothing in the webroot is writable, the database is unreachable from anywhere but the
+web container, and every denial holds against real webshell-shaped files. **Not yet
+done:** the core upgrade migration from 4.4.16, which runs on the first visit to
+`/ecrire/` and needs a real admin login. See [Before first deploy](#before-first-deploy).
 
 ---
 
@@ -19,7 +19,7 @@ Those belong to the rebuild. See [Before first deploy](#before-first-deploy).
 
 | | Version | Pinned in |
 |---|---|---|
-| SPIP core | **4.4.21** | `core.lock` |
+| SPIP core | **4.4.21** | `core.lock` (official zip, sha256-pinned) |
 | 10 contrib plugins | see below | `plugins.lock` (sha256 per archive) |
 | Site templates | this repository | build context |
 
@@ -69,21 +69,22 @@ file that says what this site is made of.
 
 deploy/
 ├── Dockerfile              two-stage build: assemble webroot, then harden runtime
-├── compose.yaml            nginx + php-fpm, read-only, non-root, no capabilities
+├── compose.yaml            two services: web (Apache + mod_php) and db (MariaDB)
 ├── core.lock               SPIP core version — single source of truth
 ├── plugins.lock            contrib plugins: version, archive path, sha256, size
 ├── bin/
 │   ├── fetch-plugins.sh    build-time: download, verify, unpack (fails closed)
-│   └── check-updates.sh    compare locks against upstream; --rehash to bump
+│   ├── check-updates.sh    compare locks against upstream; --rehash to bump
+│   └── backup-db.sh        daily dump out of the db container (install as cron)
 ├── config/
-│   └── mes_options.php     runtime options; secrets come from the environment
-├── nginx/
-│   ├── 00-log-format.conf  http-context settings
-│   └── monel.conf          vhost: routing plus the PHP-execution denials
+│   ├── mes_options.php     runtime options; relocates tmp/ outside the webroot
+│   └── connect.php.example template for secrets/connect.php
+├── apache/
+│   ├── hardening.conf      server-wide: ServerTokens, TraceEnable, global deny
+│   └── monel.conf          the vhost, and the PHP-execution denials
 └── php/
     ├── zz-spip-hardening.ini
-    ├── opcache-blacklist.txt
-    └── www.conf            php-fpm pool
+    └── opcache-blacklist.txt
 ```
 
 ---
@@ -118,17 +119,24 @@ layout, that last step fails.
 - **The back office stops being a write path.** `plugins/` is root-owned mode 0555 and
   `spip_loader.php` is deleted, so SVP finds nothing writable and the "install plugin"
   button is inert.
-- **A dropped file cannot execute.** `^~ /IMG/` and `^~ /local/` in nginx keep the PHP
-  handler out of both directories, and a nested regex 404s executable-looking names so
-  a shell is not even disclosed as source.
+- **A dropped file cannot execute.** `php_admin_flag engine off` on `IMG/` and
+  `local/` cannot be overridden by anything written into those directories — it is the
+  strongest primitive available here, and it has no nginx equivalent. A `FilesMatch`
+  deny means a shell is not disclosed as source either.
 - **No second stage.** `exec`/`system`/`proc_open`/`popen`/`putenv` are all in
   `disable_functions`, so PHP cannot spawn a downloader at all. `putenv` is there
   specifically to break the `LD_PRELOAD` bypass found in `stats-mailer.php`. The
   `wget`/`curl` binaries are also deleted, but treat that as noise reduction rather
   than a control: Alpine's `wget` is a BusyBox applet and removing the symlink does
   not remove the applet. The boundary is `disable_functions` plus egress filtering.
-- **No CGI.** nginx ignores `.htaccess` entirely, so the `AddHandler cgi-script .alfa`
-  trick from `/var/www/mlml.fr` has nothing to attach to. `.alfa` is 404'd anyway.
+- **No CGI, and no usable `.htaccess`.** `mod_cgi`/`mod_cgid` are not loaded at all, so
+  the `AddHandler cgi-script .alfa` trick from `/var/www/mlml.fr` has nothing to attach
+  to. `AllowOverride None` on the writable directories means a dropped `.htaccess` is
+  never read; `AllowOverride All` on the webroot is safe precisely because that
+  directory is read-only, and it buys us SPIP's own upstream-maintained rules.
+- **No symlink escape.** `Options SymLinksIfOwnerMatch` on the writable directories
+  refuses any symlink whose target has a different owner, so a link from `IMG/` to the
+  mounted `connect.php` is not followed.
 
 ---
 
@@ -152,51 +160,65 @@ item 11, the `preprod-mlml-01` rebuild (item 6), and the CNIL determination (ite
 
 ## Before first deploy
 
-Ordered. Items 1–3 are blocking.
+Ordered. Items 1–3 are blocking; the site will not start without them.
 
-1. **Provide the secrets.** Create `deploy/secrets/` — untracked, mode 0700 — with:
-   - `connect.php` — database credentials, **rotated**, not the compromised ones
-   - `cles.php` — SPIP's encryption keys, carried over from the old install
+1. **Provide the secrets.** Create `deploy/secrets/` — untracked — with:
+   - `connect.php` — database credentials, **rotated**, not the compromised ones.
+     Start from `config/connect.php.example`; note the host is `db`, the compose
+     service, not `localhost`.
+   - `cles.php` — SPIP's encryption keys, carried over from the old install.
 
    `cles.php` must be carried over rather than regenerated: SPIP uses it to decrypt
-   existing stored values. Copy it from the preserved webroot, not from a running
-   compromised host.
+   existing stored values, and it cannot create one because the mount is read-only.
+   Without it the site returns a 200 with an empty page and logs
+   `Echec ecriture du fichier cle`. Copy it from the preserved webroot, not from a
+   running compromised host.
 
-2. **Check `_BAZAAR_VIDEO_ID`.** It is 50 in the recovered prod config and 26 in
+   **Own them `root:65532`, mode `0640` — not `65532:65532`.** `SymLinksIfOwnerMatch`
+   is what stops an attacker symlinking from `IMG/` to `connect.php`, and it compares
+   the symlink's owner against the target's. If the secrets are owned by the runtime
+   user, that comparison succeeds and the file is served as a static download. Verified
+   both ways: a root-owned target is refused, a same-owner target is served.
+
+2. **Set `MONEL_DB_PASSWORD`.** It creates the database user on first start and must
+   match the password in `connect.php`. Do not reuse the pre-incident value — the old
+   one is in a dump the attacker could read (report §4.3).
+
+3. **Migrate the data.** One-time, against the real database:
+   ```sh
+   gunzip -c /var/backups/mysql/sqldump/monel.sql.gz \
+     | docker compose -f deploy/compose.yaml exec -T db mariadb -umonel -p"$MONEL_DB_PASSWORD" monel
+   ```
+   Then copy the verified-clean `IMG/` into the `spip_img` volume. Note the image has
+   no installer (`ecrire/install` is deleted at build), so an empty database cannot
+   bootstrap itself — restoring a dump is the only supported path.
+
+4. **Check `_BAZAAR_VIDEO_ID`.** It is 50 in the recovered prod config and 26 in
    development checkouts — SPIP article ids are per-database. 50 is the default here.
    Confirm it against the restored database and set `MONEL_BAZAAR_VIDEO_ID` if it
    differs — see [Runtime settings](#runtime-settings); no rebuild needed.
 
-3. **Decide the `/ecrire/` restriction.** The block is written and commented out in
-   `nginx/monel.conf`. Four accounts use the back office. If they can work from known
+5. **Decide the `/ecrire/` restriction.** The block is written and commented out in
+   `apache/monel.conf`. Four accounts use the back office. If they can work from known
    networks, uncomment it — it removes the entire authenticated attack surface from the
    internet, and it is the single cheapest control in this directory.
 
-4. **Check the image-processing setting.** `exec` is disabled, so SPIP must use GD
+6. **Check the image-processing setting.** `exec` is disabled, so SPIP must use GD
    (the default), not `convert`/netpbm. Back office → Configuration → Fonctions
    avancées → Traitement des images.
 
-5. **Check facteur's transport.** It must be SMTP. The sendmail transport uses
+7. **Check facteur's transport.** It must be SMTP. The sendmail transport uses
    `popen()`, which is disabled — and there is no MTA in the container anyway.
 
-6. **Freeze the composer lock.** `composer create-project` re-resolves transitive
-   dependencies (the symfony polyfills and so on) on every build, so two builds of the
-   same tag are not byte-identical. The runtime image deletes `composer.lock`, so pull
-   it from the builder stage:
-   ```sh
-   docker build -f deploy/Dockerfile --target builder -t monel-builder:tmp .
-   docker create --name t monel-builder:tmp
-   docker cp t:/build/composer.lock deploy/composer.lock
-   docker rm t
-   ```
-   Then add a `COPY deploy/composer.lock /build/composer.lock` + `composer install`
-   step after `create-project --no-install`. Until this is done, "same tag" means
-   "same SPIP version", not "same bytes" — which is enough to deploy safely but not
-   enough to prove two builds are identical.
+8. **Run the core migration.** The database is at the 4.4.16 schema; the image ships
+   4.4.21. SPIP applies the migration on the first visit to `/ecrire/` by a logged-in
+   admin. It writes to the database, not the filesystem, so read-only is fine — but the
+   deploy is not finished until someone does it.
 
-7. **Set `set_real_ip_from`** in `nginx/00-log-format.conf` to the proxy's range,
-   otherwise every log line records the proxy address — which would have made the
-   57-source-address analysis in the incident report impossible.
+9. **Configure `mod_remoteip`** so the container logs the real client address rather
+   than the front proxy's. Without it every log line records the proxy — which would
+   have made the 57-source-address analysis in the incident report impossible, and
+   would also break the `/ecrire/` IP restriction above.
 
 ---
 
@@ -250,6 +272,36 @@ would have prevented the incident outright.
 > Scheduled workflows only run from the **default branch**. Until this lands on
 > `master`, the nightly check will not fire — use *Run workflow* to test it.
 
+### Database
+
+MariaDB runs in the stack, not on the host. It has **no published port** and sits on an
+`internal: true` network, so Docker installs no gateway for it: nothing off the host can
+reach it, and it cannot reach anything itself. Verified both directions.
+
+That does not protect the database from a compromise of the site — an attacker with PHP
+execution reaches it either way, exactly as they would have over a unix socket. What it
+buys is the reverse direction (nothing else on the host can reach SPIP's data) and, more
+importantly, a genuinely self-contained stack: moving this site to its own VM, which is
+report recommendation #9 and the largest outstanding structural fix, becomes a copy of
+`compose.yaml` plus two volumes rather than a rebuild.
+
+**Backups replace the backupninja handler.** `10-moneldb.mysql` authenticated through
+`/etc/mysql/debian.cnf` against a local mysqld and cannot reach a container. Install
+`bin/backup-db.sh` as a daily root cron instead. It writes to the same path the old
+setup used —
+
+```
+/var/backups/mysql/sqldump/monel.sql.gz
+```
+
+— so `prod-db-backup-sync` on preprod and every restore habit keep working. Two
+deliberate changes from the old config: it dumps **only the `monel` schema**, where
+`databases = all` also dumped `mysql` and therefore every account's password hash into
+the same directory (the same mistake as `globals.sql.gz` on the Postgres side, §5.9
+item 3); and the dump directory is **0700**, where the Postgres backups were
+world-readable and that is how a webshell read the entire Cyclos database without a
+single credential (§5.2, report item 12).
+
 ### Runtime settings
 
 Settings that vary per environment are environment variables, not baked constants, so
@@ -258,31 +310,35 @@ changing one is a `docker compose up -d` rather than a rebuild.
 | Variable | Default | Purpose |
 |---|---|---|
 | `MONEL_IMAGE` | — (required) | image tag to run |
+| `MONEL_PORT` | `8090` | localhost port the front proxy targets |
 | `MONEL_BAZAAR_VIDEO_ID` | `50` | SPIP article id of the "comment ça marche" video |
 | `CYCLOS_*` | unset | unreleased `cyclos-api` branch; absent in production |
 
-**Adding a new one means editing two files.** php-fpm clears the worker environment,
-so a variable must be both read in `config/mes_options.php` *and* allowlisted as
-`env[NAME] = $NAME` in `php/www.conf`. Miss the second and the setting silently falls
-back to its default with no error — the failure mode is a wrong value, not a crash.
+Adding a new one means reading it in `config/mes_options.php` and passing it in
+`compose.yaml` — that is all. Under mod_php the container environment *is* the Apache
+process environment, so `getenv()` sees it directly.
 
-The allowlist is deliberate: `clear_env = yes` plus explicit entries means only these
-variables reach PHP. Everything else in the container environment stays invisible to
-`getenv()` and to `phpinfo()`. The base image ships `clear_env = no`, which would have
-worked by accident and broken silently on a base-image change.
+**That cuts both ways, and it is a real regression from the php-fpm layout.** php-fpm
+could allowlist exactly which variables reached PHP (`clear_env` plus explicit `env[]`
+entries); mod_php has no equivalent, so `getenv()` and `phpinfo()` can read the entire
+container environment. Keep the environment minimal, and put nothing in it that PHP
+should not be able to read. The database credentials are not there — they are in
+`connect.php`, mounted read-only from outside the webroot.
 
 ### Verifying a running container
 
 ```sh
 # Should print nothing. Anything listed is an unexpected write to the webroot.
-docker diff $(docker compose -f deploy/compose.yaml ps -q php) | grep -v '^C /var/spip'
+docker diff $(docker compose -f deploy/compose.yaml ps -q web) | grep -v '^C /var/spip'
 
-# Should 404, not 200 and not the file's source.
-curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/IMG/test.php
-
-# Should 400.
+# All three should be 403 — denied, and not disclosed as source either.
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8090/IMG/test.php
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8090/IMG/shell.alfa
 curl -s -o /dev/null -w '%{http_code}\n' \
-     -H 'X-Spip-Filtre: html_entity_decode' http://127.0.0.1:8080/
+     -H 'X-Spip-Filtre: html_entity_decode' http://127.0.0.1:8090/
+
+# Should be 200 — legitimate uploads must still serve.
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8090/IMG/some-real-image.jpg
 ```
 
 Wire the first of those into monitoring. Report §7 is blunt about this: nothing
