@@ -215,10 +215,13 @@ Ordered. Items 1–3 are blocking; the site will not start without them.
    admin. It writes to the database, not the filesystem, so read-only is fine — but the
    deploy is not finished until someone does it.
 
-9. **Configure `mod_remoteip`** so the container logs the real client address rather
-   than the front proxy's. Without it every log line records the proxy — which would
-   have made the 57-source-address analysis in the incident report impossible, and
-   would also break the `/ecrire/` IP restriction above.
+9. **Confirm the front proxy sends `X-Forwarded-For`.** `mod_remoteip` is enabled in
+   the image and trusts RFC1918 proxies, and the access log uses `%a`, so the real
+   client address is recorded — verified. The ansible vhost
+   (`roles/monel-spip/templates/apache/vhost.conf`) sets `X-Forwarded-Proto`; the
+   `For` header is added by `mod_proxy_http` automatically. Without this the log
+   would record the proxy, which would have made the 57-source-address analysis in
+   the incident report impossible, and would break the `/ecrire/` IP restriction.
 
 ---
 

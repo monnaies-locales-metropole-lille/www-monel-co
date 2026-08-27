@@ -126,7 +126,7 @@ RUN rm -f /usr/bin/wget /usr/bin/curl /usr/bin/nc /usr/bin/telnet
 
 # rewrite: SPIP's URL routing.  headers: the CSP sandbox on IMG/ and HSTS-adjacent
 # headers.  Nothing else is enabled — notably not cgi, cgid or include.
-RUN a2enmod rewrite headers && a2dismod -f autoindex status
+RUN a2enmod rewrite headers remoteip && a2dismod -f autoindex status
 
 ARG UID=65532
 ARG GID=65532
