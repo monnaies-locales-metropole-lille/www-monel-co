@@ -166,7 +166,9 @@ Ordered. Items 1–3 are blocking; the site will not start without them.
    - `connect.php` — database credentials, **rotated**, not the compromised ones.
      Start from `config/connect.php.example`; note the host is `db`, the compose
      service, not `localhost`.
-   - `cles.php` — SPIP's encryption keys, carried over from the old install.
+   - `cles.php` — SPIP's encryption keys, carried over from the old install. Note
+     4.4.21 uses **three**: `secret_du_site`, `secret_des_auth` and
+     `secret_des_actions`. An older file has only the first two; generate the third.
 
    `cles.php` must be carried over rather than regenerated: SPIP uses it to decrypt
    existing stored values, and it cannot create one because the mount is read-only.
@@ -211,11 +213,45 @@ Ordered. Items 1–3 are blocking; the site will not start without them.
    `popen()`, which is disabled — and there is no MTA in the container anyway.
 
 8. **Run the core migration.** The database is at the 4.4.16 schema; the image ships
-   4.4.21. SPIP applies the migration on the first visit to `/ecrire/` by a logged-in
-   admin. It writes to the database, not the filesystem, so read-only is fine — but the
-   deploy is not finished until someone does it.
+   4.4.21. SPIP applies it on the first visit to `/ecrire/` by a logged-in admin, and
+   the deploy is not finished until someone does that.
 
-9. **Confirm the front proxy sends `X-Forwarded-For`.** `mod_remoteip` is enabled in
+   It is mostly a database operation, but **not purely** — the migration can also want
+   to write `cles.php`, which the read-only secrets mount refuses. Two cases seen in
+   practice:
+
+   - `maj/2021.php` deletes the `secret_du_site` row from `spip_meta`, so the key
+     machinery re-derives it.
+   - **A new SPIP version can introduce a new key.** 4.4.21 added
+     `secret_des_actions`, which does not exist in a `cles.php` written by 4.4.16.
+
+   The symptom is misleading: the private area shows *"erreur lors de l'écriture du
+   fichier .../cles.php … vérifier les droits d'écriture"*, which reads like a
+   permissions bug. It is a missing key. Do **not** make the mount writable — find the
+   key name and add it to the vault:
+
+   ```sh
+   docker compose exec -T web sh -c \
+     'grep "impossible de generer" /var/spip/tmp/log/chiffrer.log | tail -3'
+   #  -> "... impossible de generer une cle secret_des_actions"
+   openssl rand -base64 32          # every SPIP key is 32 random bytes, base64
+   ```
+
+9. **Re-activate the contrib plugins.** SPIP's back-office installer puts plugins in
+   `plugins/auto/<name>/v<version>/` and records that exact path in `spip_meta`. This
+   image puts them at `plugins/<name>/`, so after restoring an older database SPIP
+   finds nothing at the recorded paths and *Configuration → Gestion des plugins →
+   Actifs* shows **"Aucun plugin"**.
+
+   Fix in the UI: the **Tous** tab lists them at their new paths; tick the ones that
+   should be active and apply. SPIP rewrites `spip_meta` and it sticks.
+
+   Note that `plugins-dist` plugins are *verrouillés*, not *actifs* — an empty Actifs
+   tab is only wrong for contrib plugins. Also note that **scssphp compiles the site's
+   CSS at runtime into `local/`**, so until it is active the stylesheet 404s and the
+   site renders unstyled.
+
+10. **Confirm the front proxy sends `X-Forwarded-For`.** `mod_remoteip` is enabled in
    the image and trusts RFC1918 proxies, and the access log uses `%a`, so the real
    client address is recorded — verified. The ansible vhost
    (`roles/monel-spip/templates/apache/vhost.conf`) sets `X-Forwarded-Proto`; the
@@ -422,6 +458,10 @@ Things found while writing this that are not resolved here.
   `vendor/spip/security` and is pinned with the core. It also did not prevent either
   CVE — the publisher said so explicitly, and the compromised `/var/www/mlml.fr` had it
   installed.
+- **`css/custom-bootstrap.css` is not in the repository** and does not need to be:
+  scssphp generates it into `local/` at runtime. It is therefore absent from the image
+  by design — but only appears once the **scssphp plugin is active** (step 9). An
+  unstyled site after a rebuild is that, not a missing build step.
 - **`compromised-backup/` is still untracked and unignored** (report item 19). The
   `.dockerignore` here keeps it out of image builds, but it should be gitignored
   independently.
