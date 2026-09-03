@@ -75,6 +75,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPORT: ${{ steps.check.outputs.report }}
           CODE: ${{ steps.check.outputs.exit_code }}
+          # A literal login, not @me: inside Actions the token acts as
+          # github-actions[bot], so @me would resolve to the bot and assign nobody.
+          # Assignment is what produces a push notification in the GitHub mobile app;
+          # watching the repository only ever delivers the creation event.
+          ASSIGNEE: rnivet
         run: |
           set -euo pipefail
 
@@ -118,9 +123,32 @@ jobs:
           if [ -n "$existing" ]; then
             gh issue edit "$existing" --body "$body"
             echo "Updated issue #$existing"
+
+            # Editing the body notifies nobody on GitHub — not watchers, not the
+            # assignee, not the author. Issue #2 was opened on 2026-08-27 and then
+            # silently re-edited every day for a week while core drifted
+            # 4.4.21 -> 4.4.22 -> 4.4.23; the only notification ever sent was the one
+            # at creation. A comment is the only reliable re-ping, so post one when
+            # the report itself changes.
+            #
+            # The signature is compared rather than the report text because $REPORT is
+            # multi-line, and `grep -F` on a multi-line pattern matches if *any* single
+            # line matches — invariant lines like '==> Checking plugins...' would make
+            # every report look unchanged. A one-line digest marker has no such trap.
+            sig=$(printf '%s' "$REPORT" | sha256sum | cut -c1-12)
+            last=$(gh issue view "$existing" --json comments \
+              --jq '[.comments[].body] | last // ""' 2>/dev/null || true)
+
+            if printf '%s' "$last" | grep -qF "report-sig: $sig"; then
+              echo "Report unchanged since the last comment; staying quiet."
+            else
+              gh issue comment "$existing" --body "$(printf 'The set of pending updates has changed:\n\n```\n%s\n```\n\n<!-- report-sig: %s -->' "$REPORT" "$sig")"
+              echo "Commented on #$existing — report changed (sig $sig)"
+            fi
           else
-            gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" --body "$body"
-            echo "Opened a new issue"
+            gh issue create --title "$ISSUE_TITLE" --label "$ISSUE_LABEL" \
+              --assignee "$ASSIGNEE" --body "$body"
+            echo "Opened a new issue, assigned to $ASSIGNEE"
           fi
 
       - name: Close the tracking issue when everything is current
