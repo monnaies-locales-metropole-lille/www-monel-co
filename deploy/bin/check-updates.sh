@@ -25,6 +25,11 @@ trap 'rm -rf "$WORK"' EXIT
 echo "==> Fetching depot manifest (~10 MB)..."
 curl -fsSL -o "$WORK/principal.xml" "$DEPOT_URL"
 
+# Set when core.lock is behind upstream and the drift has not been applied. The
+# plugin report below cannot carry this: a core-only drift leaves every plugin
+# "ok", and an exit 0 makes the nightly workflow close the tracking issue.
+core_update=0
+
 echo "==> Checking SPIP core..."
 core_latest=$(curl -fsSL "$COMPOSER_REPO/p2/spip/spip.json" | python3 -c '
 import json, re, sys
@@ -35,6 +40,7 @@ print(max(vs, key=lambda v: tuple(int(n) for n in v.split("."))))
 ')
 core_pinned=$(grep -E '^SPIP_VERSION=' "$HERE/core.lock" | cut -d= -f2)
 if [ "$core_pinned" != "$core_latest" ]; then
+	core_update=1
 	echo "  CORE UPDATE: SPIP $core_pinned -> $core_latest"
 	echo "               https://blog.spip.net/ — read the release note before bumping."
 
@@ -53,6 +59,7 @@ if [ "$core_pinned" != "$core_latest" ]; then
 				-e "s|^SPIP_SIZE=.*|SPIP_SIZE=${new_size}|" \
 				"$HERE/core.lock"
 			rm -f "$HERE/core.lock.bak"
+			core_update=0
 			echo "               core.lock updated to ${core_latest}."
 		else
 			echo "               to apply, run with --rehash, or set by hand:"
@@ -157,8 +164,13 @@ if [ "$gone" -gt 0 ]; then
 	echo "==> $gone plugin(s) missing upstream — needs manual attention."
 	exit 2
 fi
-if [ "$updates" -gt 0 ]; then
-	echo "==> $updates plugin update(s) available. Run with --rehash to apply."
+if [ "$core_update" = "1" ] || [ "$updates" -gt 0 ]; then
+	if [ "$core_update" = "1" ]; then
+		echo "==> SPIP core is behind upstream — see above."
+	fi
+	if [ "$updates" -gt 0 ]; then
+		echo "==> $updates plugin update(s) available. Run with --rehash to apply."
+	fi
 	exit 1
 fi
 echo "==> Everything up to date."
