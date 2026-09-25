@@ -23,7 +23,7 @@
 # artifact with one checksum. It also removes composer from the build, so there is
 # no transitive-dependency resolution to pin separately.
 
-SPIP_VERSION=4.4.24
-SPIP_URL=https://files.spip.net/spip/archives/spip-v4.4.24.zip
-SPIP_SHA256=5794c882c31cf740b36221a795923feb3c08e0629c23d8f72dbdaff69a4d982b
-SPIP_SIZE=9766221
+SPIP_VERSION=4.4.25
+SPIP_URL=https://files.spip.net/spip/archives/spip-v4.4.25.zip
+SPIP_SHA256=99ba244ddf6a48d7d954dfc30db2cf4b84a2e481e47f5edd4b0c886673e0e281
+SPIP_SIZE=9766480
