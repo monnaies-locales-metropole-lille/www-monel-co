@@ -199,17 +199,173 @@ function cyclos_fetch_users($page = 0, $pageSize = null, $keywords = null) {
 }
 
 /**
- * SPIP filter to fetch Cyclos annuaire data
+ * Fetch the labels of the `code_naf_v4` selection field from Cyclos
+ *
+ * The user list only returns the selected option id, so the labels
+ * ("9499Z - Autres organisations ...") are resolved from the search metadata.
+ *
+ * @return array [option id => label]
+ */
+function cyclos_naf_labels() {
+  $api_url = defined('_CYCLOS_API_URL') ? _CYCLOS_API_URL : '';
+  $access_token = defined('_CYCLOS_ACCESS_TOKEN') ? _CYCLOS_ACCESS_TOKEN : '';
+  $group = defined('_CYCLOS_USER_GROUP') ? _CYCLOS_USER_GROUP : '';
+
+  if (empty($api_url) || empty($access_token)) {
+    return [];
+  }
+
+  // Option list rarely changes: cache it for a day
+  include_spip('inc/flock');
+  $cache_file = sous_repertoire(_DIR_CACHE, 'cyclos') . 'naf_labels.json';
+  if (file_exists($cache_file) && time() - filemtime($cache_file) < 86400) {
+    $labels = json_decode(file_get_contents($cache_file), true);
+    if (is_array($labels)) {
+      return $labels;
+    }
+  }
+
+  $url = $api_url . '/users/data-for-search';
+  if (!empty($group)) {
+    $url .= '?' . http_build_query(['groups' => $group]);
+  }
+
+  include_spip('inc/distant');
+  $response = recuperer_url($url, [
+    'headers' => [
+      'Access-Client-Token' => $access_token,
+      'Accept' => 'application/json'
+    ]
+  ]);
+
+  $data = is_array($response) ? json_decode($response['page'], true) : null;
+  $labels = [];
+  foreach ((is_array($data) && isset($data['customFields'])) ? $data['customFields'] : [] as $field) {
+    if (($field['internalName'] ?? '') === 'code_naf_v4') {
+      foreach ($field['possibleValues'] ?? [] as $value) {
+        $labels[$value['id']] = $value['value'];
+      }
+    }
+  }
+
+  if ($labels) {
+    ecrire_fichier($cache_file, json_encode($labels));
+  } elseif (file_exists($cache_file)) {
+    // API failed: fall back to stale cache
+    $labels = json_decode(file_get_contents($cache_file), true) ?: [];
+  }
+
+  return $labels;
+}
+
+/**
+ * Translate a NAF code into a readable activity sector (NAF section level)
+ *
+ * @param string $naf NAF code or label, e.g. "9499Z - Autres organisations..."
+ * @return string|null Sector label, or null if the code is not recognized
+ */
+function naf_secteur($naf) {
+  if (!preg_match('/^\s*(\d{2})/', (string) $naf, $matches)) {
+    return null;
+  }
+  $division = intval($matches[1]);
+
+  // [last division of the section => sector label]
+  $sections = [
+    3  => 'Agriculture, sylviculture et pêche',
+    9  => 'Industries extractives',
+    33 => 'Industrie et fabrication',
+    35 => 'Production d\'énergie',
+    39 => 'Eau, gestion des déchets et dépollution',
+    43 => 'Construction et BTP',
+    47 => 'Commerce',
+    53 => 'Transports et logistique',
+    56 => 'Hébergement et restauration',
+    63 => 'Information, communication et numérique',
+    66 => 'Banque et assurance',
+    68 => 'Immobilier',
+    75 => 'Conseil, études et services aux entreprises',
+    82 => 'Services administratifs et de soutien',
+    84 => 'Administration publique',
+    85 => 'Enseignement et formation',
+    88 => 'Santé et action sociale',
+    93 => 'Culture, sports et loisirs',
+    96 => 'Associations et services à la personne',
+    98 => 'Particuliers employeurs',
+    99 => 'Organisations extraterritoriales',
+  ];
+
+  foreach ($sections as $last => $label) {
+    if ($division <= $last) {
+      return $label;
+    }
+  }
+  return null;
+}
+
+/**
+ * Fetch all annuaire users and group them by activity sector
+ *
+ * @param string|null $keywords Search keywords
+ * @return array ['groups' => [['secteur' => string, 'users' => array]], 'total' => int, 'error' => string|null]
+ */
+function cyclos_fetch_annuaire($keywords = null) {
+  $users = [];
+  $error = null;
+
+  // Grouping needs the whole directory: walk all pages (capped as a safety net)
+  for ($page = 0; $page < 20; $page++) {
+    $result = cyclos_fetch_users($page, 100, $keywords);
+    $users = array_merge($users, $result['users']);
+    $error = $error ?: $result['error'];
+    if (!$result['has_next']) {
+      break;
+    }
+  }
+
+  $labels = $users ? cyclos_naf_labels() : [];
+  $autres = 'Autres adhérents';
+  $groups = [];
+
+  foreach ($users as $user) {
+    $values = is_array($user['customValues'] ?? null) ? $user['customValues'] : [];
+    $naf = $values['code_naf_v4'] ?? '';
+    $naf = $labels[$naf] ?? $naf;
+    $secteur = naf_secteur($naf) ?: $autres;
+    $groups[$secteur][] = $user;
+  }
+
+  // Sort sectors alphabetically, members without a sector last
+  uksort($groups, function ($a, $b) use ($autres) {
+    if ($a === $autres || $b === $autres) {
+      return ($a === $autres) - ($b === $autres);
+    }
+    return strnatcasecmp($a, $b);
+  });
+
+  $result = [];
+  foreach ($groups as $secteur => $members) {
+    $result[] = ['secteur' => $secteur, 'users' => $members];
+  }
+
+  return [
+    'groups' => $result,
+    'total' => count($users),
+    'error' => $error
+  ];
+}
+
+/**
+ * SPIP filter to fetch Cyclos annuaire data grouped by activity sector
  *
  * Returns the result array so the template can capture it with #SET and read
- * it via #GET{...}|table_valeur{...} (users / total / has_next / error).
+ * it via #GET{...}|table_valeur{...} (groups / total / error).
  *
  * @param mixed $dummy Dummy input (ignored)
- * @param int $page Page number (0-indexed)
  * @param string|null $keywords Search keywords
- * @return array ['users' => array, 'total' => int, 'has_next' => bool, 'error' => string|null]
+ * @return array ['groups' => array, 'total' => int, 'error' => string|null]
  */
-function filtre_cyclos_annuaire_data_dist($dummy = '', $page = 0, $keywords = null) {
+function filtre_cyclos_annuaire_data_dist($dummy = '', $keywords = null) {
   // Return the result array directly so the template can capture it with #SET
-  return cyclos_fetch_users($page, null, $keywords);
+  return cyclos_fetch_annuaire($keywords);
 }
