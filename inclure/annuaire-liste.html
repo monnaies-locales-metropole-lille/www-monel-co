@@ -1,7 +1,6 @@
-[(#SET{page_num, [(#ENV{page_num}|?{[(#ENV{page_num}|moins{1})],0})]})]
 [(#SET{keywords, [(#ENV{keywords})]})]
-[(#REM) Fetch Cyclos data — the filter returns the result array ]
-[(#SET{cyclos, [(#VAL{''}|cyclos_annuaire_data{#GET{page_num},#GET{keywords}})]})]
+[(#REM) Fetch Cyclos data grouped by activity sector — the filter returns the result array ]
+[(#SET{cyclos, [(#VAL{''}|cyclos_annuaire_data{#GET{keywords}})]})]
   <div class="container">
     <div class="py-4">
       [(#REM) Display error message if any ]
@@ -19,75 +18,41 @@
         </div>
       ]
 
-      [(#REM) User cards grid ]
-      <div class="row justify-content-center">
-        <BOUCLE_users(DATA){source tableau, #GET{cyclos}}{datapath users}>
-          <div class="col-12 col-md-4 mb-4">
-            <div class="rectangle-3d fond-blanc annuaire-card h-100 d-flex flex-column align-items-center p-4">
-              [(#VALEUR{image_url}|oui)
-                <img src="[(#VALEUR{image_url})]" alt="Logo [(#VALEUR{display})]" class="annuaire-logo mb-3"/>
-              ]
-              [(#VALEUR{image_url}|non)
-                <div class="annuaire-logo-placeholder mb-3">
-                  <img src="#CHEMIN{img/bonhomme.svg}" alt="Placeholder" style="width: 40px; height: 40px;"/>
-                </div>
-              ]
-              <div class="text-center">
-                <div class="large font-weight-bold mb-2">
-                  [(#VALEUR{display})]
-                </div>
-                [(#VALEUR{name}|oui)
-                  <div class="normal">
-                    [(#VALEUR{name})]
+      [(#REM) One section per activity sector ]
+      <B_groups>
+      <BOUCLE_groups(DATA){source tableau, #GET{cyclos}}{datapath groups}>
+        <div class="d-flex align-items-center mt-4 mb-3">
+          <img src="#CHEMIN{img/fleche.svg}"/>
+          <span class="ml-3 large"><b>[(#VALEUR{secteur})]</b></span>
+        </div>
+
+        [(#REM) User cards grid ]
+        <div class="row">
+          <BOUCLE_users(DATA){source tableau, #VALEUR{users}}>
+            <div class="col-12 col-md-4 mb-4">
+              <div class="rectangle-3d fond-blanc annuaire-card h-100 d-flex flex-column align-items-center p-4">
+                [(#VALEUR{image_url}|oui)
+                  <img src="[(#VALEUR{image_url})]" alt="Logo [(#VALEUR{name})]" class="annuaire-logo mb-3"/>
+                ]
+                [(#VALEUR{image_url}|non)
+                  <div class="annuaire-logo-placeholder mb-3">
+                    <img src="#CHEMIN{img/bonhomme.svg}" alt="Placeholder" style="width: 40px; height: 40px;"/>
                   </div>
                 ]
-                [(#VALEUR{username}|oui)
-                  <div class="small text-muted">
-                    @[(#VALEUR{username})]
-                  </div>
-                ]
+                <div class="text-center large font-weight-bold">
+                  [(#VALEUR{name})]
+                </div>
               </div>
             </div>
-          </div>
-        </BOUCLE_users>
-      </div>
+          </BOUCLE_users>
+        </div>
+      </BOUCLE_groups>
 
+      </B_groups>
       [(#REM) Empty state ]
-      <B_users>
-      </B_users>
         <div class="text-center py-5 normal">
           Aucun adhérent trouvé.
         </div>
-      <//B_users>
-
-      [(#REM) Pagination ]
-      [(#SET{has_next, [(#GET{cyclos}|table_valeur{has_next})]})]
-      [(#SET{current_page, [(#ENV{page_num}|?{#ENV{page_num},1})]})]
-
-      <div class="d-flex justify-content-center align-items-center py-4">
-        [(#GET{current_page}|>{1}|oui)
-          <a class="bouton-bleu mx-2" href="[(#SELF|parametre_url{page_num,[(#GET{current_page}|moins{1})]})]">
-            &larr; Précédent
-          </a>
-        ]
-        [(#GET{current_page}|>{1}|non)
-          <span class="bouton-bleu-clair mx-2" style="opacity: 0.5; cursor: not-allowed;">
-            &larr; Précédent
-          </span>
-        ]
-
-        <span class="mx-3 normal">Page [(#GET{current_page})]</span>
-
-        [(#GET{has_next}|oui)
-          <a class="bouton-bleu mx-2" href="[(#SELF|parametre_url{page_num,[(#GET{current_page}|plus{1})]})]">
-            Suivant &rarr;
-          </a>
-        ]
-        [(#GET{has_next}|non)
-          <span class="bouton-bleu-clair mx-2" style="opacity: 0.5; cursor: not-allowed;">
-            Suivant &rarr;
-          </span>
-        ]
-      </div>
+      <//B_groups>
     </div>
   </div>
