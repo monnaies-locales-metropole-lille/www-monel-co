@@ -323,6 +323,11 @@ function cyclos_fetch_annuaire($keywords = null) {
     }
   }
 
+  // Only members with a profile photo appear in the annuaire
+  $users = array_values(array_filter($users, function ($user) {
+    return !empty($user['image_url']);
+  }));
+
   $labels = $users ? cyclos_naf_labels() : [];
   $autres = 'Autres adhérents';
   $groups = [];
