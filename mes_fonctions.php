@@ -259,44 +259,69 @@ function cyclos_naf_labels() {
 }
 
 /**
- * Translate a NAF code into a readable activity sector (NAF section level)
+ * Translate a NAF code into one of the annuaire's activity sectors
+ *
+ * The official NAF sections fit Monel's members badly (designers and accountants
+ * share "Activités spécialisées, scientifiques et techniques"), so members are
+ * grouped into ten sectors of our own: by NAF division (first two digits), with a
+ * few classes (first four characters) split out of mixed divisions.
  *
  * @param string $naf NAF code or label, e.g. "9499Z - Autres organisations..."
  * @return string|null Sector label, or null if the code is not recognized
  */
 function naf_secteur($naf) {
-  if (!preg_match('/^\s*(\d{2})/', (string) $naf, $matches)) {
+  if (!preg_match('/^\s*(\d{2})\.?(\d{2})/', (string) $naf, $matches)) {
     return null;
   }
   $division = intval($matches[1]);
+  $class = $matches[1] . $matches[2];
 
-  // [last division of the section => sector label]
-  $sections = [
-    3  => 'Agriculture, sylviculture et pêche',
-    9  => 'Industries extractives',
-    33 => 'Industrie et fabrication',
-    35 => 'Production d\'énergie',
-    39 => 'Eau, gestion des déchets et dépollution',
-    43 => 'Construction et BTP',
-    47 => 'Commerce',
-    53 => 'Transports et logistique',
-    56 => 'Hébergement et restauration',
-    63 => 'Information, communication et numérique',
-    66 => 'Banque et assurance',
-    68 => 'Immobilier',
-    75 => 'Conseil, études et services aux entreprises',
-    82 => 'Services administratifs et de soutien',
-    84 => 'Administration publique',
-    85 => 'Enseignement et formation',
-    88 => 'Santé et action sociale',
-    93 => 'Culture, sports et loisirs',
-    96 => 'Associations et services à la personne',
-    98 => 'Particuliers employeurs',
-    99 => 'Organisations extraterritoriales',
+  // Classes that belong elsewhere than the rest of their division
+  $classes = [
+    '1813' => 'Communication, design & événementiel', // pré-presse
+    '5811' => 'Communication, design & événementiel', // édition de livres
+    '5813' => 'Communication, design & événementiel', // édition de journaux
+    '5814' => 'Communication, design & événementiel', // édition de revues
+    '5819' => 'Communication, design & événementiel', // autres activités d'édition
+    '7021' => 'Communication, design & événementiel', // relations publiques
+    '7410' => 'Communication, design & événementiel', // design
+    '8230' => 'Communication, design & événementiel', // foires, salons, congrès
+  ];
+  if (isset($classes[$class])) {
+    return $classes[$class];
+  }
+
+  // [first division, last division, sector]
+  $divisions = [
+    [1, 3, 'Agriculture & alimentation'],
+    [10, 11, 'Agriculture & alimentation'],
+    [5, 9, 'Artisanat, fabrication & réparation'],
+    [12, 33, 'Artisanat, fabrication & réparation'],
+    [95, 95, 'Artisanat, fabrication & réparation'],
+    [41, 43, 'Architecture, construction & ingénierie'],
+    [71, 71, 'Architecture, construction & ingénierie'],
+    [45, 47, 'Commerce, location & services de proximité'],
+    [68, 68, 'Commerce, location & services de proximité'],
+    [77, 77, 'Commerce, location & services de proximité'],
+    [96, 96, 'Commerce, location & services de proximité'],
+    [55, 56, 'Restauration & hébergement'],
+    [58, 58, 'Numérique'],
+    [61, 63, 'Numérique'],
+    [59, 60, 'Arts, culture & spectacle'],
+    [90, 91, 'Arts, culture & spectacle'],
+    [73, 73, 'Communication, design & événementiel'],
+    [64, 66, 'Conseil, gestion & services aux entreprises'],
+    [69, 70, 'Conseil, gestion & services aux entreprises'],
+    [72, 72, 'Conseil, gestion & services aux entreprises'],
+    [74, 74, 'Conseil, gestion & services aux entreprises'],
+    [78, 78, 'Conseil, gestion & services aux entreprises'],
+    [80, 82, 'Conseil, gestion & services aux entreprises'],
+    [84, 88, 'Éducation, social & associations'],
+    [93, 94, 'Éducation, social & associations'],
   ];
 
-  foreach ($sections as $last => $label) {
-    if ($division <= $last) {
+  foreach ($divisions as [$first, $last, $label]) {
+    if ($division >= $first && $division <= $last) {
       return $label;
     }
   }
