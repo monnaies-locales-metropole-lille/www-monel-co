@@ -399,6 +399,12 @@ This is the part the incident turned on. 4.4.20 was released 17 August, 4.4.21 o
 `--rehash` moves plugins only. Core is bumped by editing `SPIP_VERSION` in
 `core.lock` after reading the release note at <https://blog.spip.net/>.
 
+The check also compares the PHP in the last built image with its `php:X.Y-apache`
+base. PHP is not pinned: when it reports `PHP UPDATE`, tag a new release with no code
+change and the build picks up the patched base image. Reading our image needs
+`GITHUB_TOKEN` with `read:packages`; the nightly workflow has it, a local run skips
+that comparison without one.
+
 Then rebuild, tag, deploy. Two notes:
 
 - **Core upgrades run a database migration on first visit to `/ecrire/`.** The site

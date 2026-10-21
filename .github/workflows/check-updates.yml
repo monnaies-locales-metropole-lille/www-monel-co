@@ -31,6 +31,8 @@ jobs:
     permissions:
       contents: read
       issues: write
+      # Reads PHP_VERSION from our last built image on GHCR (check-updates.sh).
+      packages: read
 
     steps:
       - name: Check out
@@ -38,6 +40,8 @@ jobs:
 
       - name: Run update check
         id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
           out=$(./deploy/bin/check-updates.sh 2>&1)
@@ -101,6 +105,7 @@ jobs:
           \`\`\`sh
           ./deploy/bin/check-updates.sh --rehash   # plugins: bump, re-download, re-hash
           # core: edit SPIP_VERSION in deploy/core.lock after reading the release note
+          # PHP:  no edit; tag a new release so the build picks up the new base image
           \`\`\`
 
           Then review the lockfile diff, tag a release, and let the build workflow

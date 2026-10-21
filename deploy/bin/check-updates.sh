@@ -5,7 +5,8 @@
 #   ./bin/check-updates.sh --rehash     rewrite plugins.lock at the latest stable
 #                                       versions, downloading and hashing each one
 #
-# Also reports the latest SPIP core release so the two never drift apart again.
+# Also reports the latest SPIP core release so the two never drift apart again,
+# and whether the PHP in our last built image is behind its php:X.Y-apache base.
 # Intended for CI (nightly) as much as for humans — see README §Upgrading.
 
 set -euo pipefail
@@ -72,6 +73,99 @@ if [ "$core_pinned" != "$core_latest" ]; then
 	fi
 else
 	echo "  core up to date: SPIP $core_pinned"
+fi
+
+# The runtime stage builds FROM a floating php:X.Y-apache tag, so a PHP security
+# release only reaches the site when someone tags a new release. On 2026-10-21
+# (PHP2Shell, CVE-2026-109618/109619) nothing here noticed; the site was taken
+# offline by hand until 8.4.27 reached the base image.
+#
+# Compares PHP_VERSION in the config of our last built image (:latest) against the
+# current base image. Both carry it as an env var inherited from the official
+# image, so this reads two manifests and two configs and pulls nothing.
+php_update=0
+
+# Print PHP_VERSION from the linux/amd64 image of <registry>/<repo>:<tag>, using a
+# bearer token. Prints nothing if anything along the way fails.
+image_php_version() {
+	local registry=$1 repo=$2 tag=$3 token=$4 manifest digest config
+	local accept_index='application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json'
+	local accept_manifest='application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+
+	manifest=$(curl -fsSL -H "Authorization: Bearer $token" -H "Accept: $accept_index, $accept_manifest" \
+		"https://$registry/v2/$repo/manifests/$tag") || return 0
+	# A multi-arch index (and ours, which also holds provenance/SBOM attestations
+	# as unknown/unknown entries) needs one more hop to the amd64 manifest.
+	digest=$(python3 -c '
+import json, sys
+m = json.load(sys.stdin)
+for d in m.get("manifests", []):
+    p = d.get("platform", {})
+    if p.get("os") == "linux" and p.get("architecture") == "amd64":
+        print(d["digest"]); break
+' <<< "$manifest")
+	if [ -n "$digest" ]; then
+		manifest=$(curl -fsSL -H "Authorization: Bearer $token" -H "Accept: $accept_manifest" \
+			"https://$registry/v2/$repo/manifests/$digest") || return 0
+	fi
+	digest=$(python3 -c 'import json, sys; print(json.load(sys.stdin)["config"]["digest"])' <<< "$manifest") || return 0
+	# Docker Hub redirects blobs to a CDN; curl does not forward a custom
+	# Authorization header across hosts, which is what the CDN wants.
+	config=$(curl -fsSL -H "Authorization: Bearer $token" "https://$registry/v2/$repo/blobs/$digest") || return 0
+	python3 -c '
+import json, sys
+for e in json.load(sys.stdin)["config"].get("Env") or []:
+    if e.startswith("PHP_VERSION="):
+        print(e.split("=", 1)[1])
+' <<< "$config"
+}
+
+echo "==> Checking PHP base image..."
+base_ref=$(grep -E '^FROM php:[^ ]+' "$HERE/Dockerfile" | awk '{print $2}' | head -1)
+base_tag=${base_ref#php:}
+php_series=$(grep -oE '^[0-9]+\.[0-9]+' <<< "$base_tag")
+own_repo="monnaies-locales-metropole-lille/monel-spip"
+
+hub_token=$(curl -fsSL "https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/php:pull" \
+	| python3 -c 'import json, sys; print(json.load(sys.stdin)["token"])' || true)
+php_base=$(image_php_version registry-1.docker.io library/php "$base_tag" "$hub_token" || true)
+
+php_release=$(curl -fsSL "https://www.php.net/releases/index.php?json&version=$php_series" \
+	| python3 -c 'import json, sys; print(json.load(sys.stdin).get("version", ""))' || true)
+
+# GITHUB_TOKEN with packages:read in CI. Locally, a token with read:packages, e.g.
+#   GITHUB_TOKEN=$(gh auth token) ./bin/check-updates.sh
+php_image=""
+if [ -n "${GITHUB_TOKEN:-}" ]; then
+	ghcr_token=$(curl -fsL -u "token:$GITHUB_TOKEN" \
+		"https://ghcr.io/token?service=ghcr.io&scope=repository:$own_repo:pull" \
+		| python3 -c 'import json, sys; print(json.load(sys.stdin)["token"])' || true)
+	[ -n "$ghcr_token" ] && php_image=$(image_php_version ghcr.io "$own_repo" latest "$ghcr_token" || true)
+fi
+
+# Is $1 strictly older than $2?
+version_lt() {
+	[ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]
+}
+
+if [ -z "$php_base" ]; then
+	echo "  WARNING: could not read PHP_VERSION from $base_ref on Docker Hub."
+elif [ -z "$php_image" ]; then
+	echo "  base $base_ref is PHP $php_base; skipped comparing with our image"
+	echo "  (needs GITHUB_TOKEN with read:packages to read ghcr.io/$own_repo)."
+elif version_lt "$php_image" "$php_base"; then
+	php_update=1
+	echo "  PHP UPDATE: image PHP $php_image -> base $base_ref PHP $php_base"
+	echo "              Tag a new release; no code change is needed, the build picks up"
+	echo "              the new base image. Then bump monel_image_tag in deploiement-cyclos."
+else
+	echo "  php up to date: PHP $php_image ($base_ref)"
+fi
+
+# Informational: PHP has released but the official image has not caught up. There
+# is nothing to rebuild yet, so this does not fail the check.
+if [ -n "$php_release" ] && [ -n "$php_base" ] && version_lt "$php_base" "$php_release"; then
+	echo "  note: php.net has PHP $php_release, $base_ref still on $php_base — rebuild once it moves."
 fi
 
 echo "==> Checking plugins..."
@@ -164,9 +258,12 @@ if [ "$gone" -gt 0 ]; then
 	echo "==> $gone plugin(s) missing upstream — needs manual attention."
 	exit 2
 fi
-if [ "$core_update" = "1" ] || [ "$updates" -gt 0 ]; then
+if [ "$core_update" = "1" ] || [ "$php_update" = "1" ] || [ "$updates" -gt 0 ]; then
 	if [ "$core_update" = "1" ]; then
 		echo "==> SPIP core is behind upstream — see above."
+	fi
+	if [ "$php_update" = "1" ]; then
+		echo "==> The image's PHP is behind its base image — see above."
 	fi
 	if [ "$updates" -gt 0 ]; then
 		echo "==> $updates plugin update(s) available. Run with --rehash to apply."
