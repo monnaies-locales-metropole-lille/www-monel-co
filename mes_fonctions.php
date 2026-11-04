@@ -297,6 +297,7 @@ function naf_secteur($naf) {
     [10, 11, 'Agriculture & alimentation'],
     [5, 9, 'Artisanat, fabrication & réparation'],
     [12, 33, 'Artisanat, fabrication & réparation'],
+    [38, 38, 'Artisanat, fabrication & réparation'],
     [95, 95, 'Artisanat, fabrication & réparation'],
     [41, 43, 'Architecture, construction & ingénierie'],
     [71, 71, 'Architecture, construction & ingénierie'],
